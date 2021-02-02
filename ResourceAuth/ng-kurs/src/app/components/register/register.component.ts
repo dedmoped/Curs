@@ -1,0 +1,65 @@
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Inject, Injectable } from '@angular/core';
+import { Store_API_URL } from 'src/app/app-tokens';
+import { FormGroup, FormControl, Validators,FormBuilder } from '@angular/forms';
+@Component({
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss']
+})
+
+export class RegisterComponent implements OnInit {
+
+  constructor(private route: Router, @Inject(Store_API_URL) private apiUrl: string, private formBuilder: FormBuilder) { }
+  Roles: any = ['admin', 'author', 'user'];
+  registerForm: FormGroup;
+  submitted = false;
+
+  ngOnInit(): void {
+    this.registerForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required]
+    }, {
+      validator: MustMatch('password', 'confirmPassword')
+    });
+
+  }
+
+  login(email: string, password: string) {
+    alert($.ajax({async:false,url: `${this.apiUrl}api/auth/register/`+email+"/"+password,type:'POST'}).responseText);
+    this.route.navigate(["auth"]);
+  }
+
+  get f() { return this.registerForm.controls; }
+
+  onSubmit() {
+    this.submitted = true;
+
+    // stop here if form is invalid
+    if (this.registerForm.invalid) {
+      return;
+    }
+    this.login(this.registerForm.controls['email'].value, this.registerForm.controls['password'].value);
+  }
+
+}
+export function MustMatch(controlName: string, matchingControlName: string) {
+  return (formGroup: FormGroup) => {
+    const control = formGroup.controls[controlName];
+    const matchingControl = formGroup.controls[matchingControlName];
+
+    if (matchingControl.errors && !matchingControl.errors.mustMatch) {
+      // return if another validator has already found an error on the matchingControl
+      return;
+    }
+
+    // set error on matchingControl if validation fails
+    if (control.value !== matchingControl.value) {
+      matchingControl.setErrors({ mustMatch: true });
+    } else {
+      matchingControl.setErrors(null);
+    }
+  }
+}

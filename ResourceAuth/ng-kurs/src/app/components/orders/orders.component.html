@@ -1,0 +1,16 @@
+<div class="container">
+<div class="card mb-3" *ngFor=" let ord of orders">
+    <a href="/slotinfo/{{ord.id}}">
+    <img class="card-img-top"  src="{{ord.imageurl}}" alt="Card image cap">
+    </a>
+    <div class="card-body">
+      <h5 class="card-title">{{ord.seller}}</h5>
+      <p class="card-text">{{ord.description}}</p>
+      <p class="card-text">Текущая цена {{ord.price}} RUB</p>
+      <p class="card-text">Ваша цена {{foo(ord.id)}} RUB </p>
+      <p class="card-text">Наибольшую цену дал <input  readonly id="{{ord.id}}"/> {{getmaxprice(ord.id)}} RUB </p>
+      <button class="btn-danger" (click)="RemoveOrder(ord.id)">Delete</button>
+
+    </div>
+    </div>
+</div>

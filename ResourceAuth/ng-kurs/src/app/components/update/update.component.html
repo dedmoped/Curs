@@ -1,0 +1,30 @@
+
+<div class="main-div" *ngFor="let slot of slots">
+    <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title><input value="{{slot.seller}}" name="seller" readonly matInput #seller> </mat-card-title>
+        </mat-card-header>
+        <img mat-card-image src="{{slot.imageurl}}" width="200px" alt="Photo of a Shiba Inu">
+        <div class="uploadfilecontainer" (click)="fileInput.click()" appDragDrop
+ (onFileDropped)="uploadFile($event)">
+    <input hidden type="file" accept="image/*" #fileInput (change)="uploadFile($event.target.files)">
+  </div>
+        <mat-card-content>
+          <p>
+            <img [src]="imgUrl[0]" id="img" height="200px" />
+            <br />
+            <br />
+            <input type="hidden" value="{{slot.id}}" #id />
+            <label>Описание</label>
+            <input value="{{slot.description}}" name="description" matInput #description>
+            <label>Цена</label>
+            <input value="{{slot.price}}" name="цена" matInput #price>
+          </p>
+
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-button (click)="updateslot(id.value,seller.value,price.value,description.value)">Update</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>

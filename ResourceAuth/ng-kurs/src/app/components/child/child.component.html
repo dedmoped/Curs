@@ -1,0 +1,24 @@
+
+<div class="main-div" >
+    <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title><input  name="seller" matInput #seller> </mat-card-title>
+        </mat-card-header>
+        <div class="uploadfilecontainer" (click)="fileInput.click()" appDragDrop
+ (onFileDropped)="uploadFile($event)">
+    <input hidden type="file" #fileInput (change)="uploadFile($event.target.files)">
+  </div>
+        <mat-card-content>
+          <p>
+            <img [src]="imgUrl[0]" id="img" height="200px"/>
+           <input   name="description"matInput #description>
+           <input   name="price" matInput #price>
+          </p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button (click)="updateslot()">Update</button>
+          <button mat-button>Delete</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>

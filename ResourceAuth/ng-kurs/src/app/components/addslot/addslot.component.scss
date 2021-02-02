@@ -1,0 +1,67 @@
+ mat-card::ng-deep.mat-card-header-text {
+    width: 100%;
+  }
+
+  .main-div{
+    width: 800px;
+    margin: auto;
+  }
+  .example-card {
+    max-width: 700px;
+    text-align:center;
+  }
+  
+  .flex-row {
+    display: flex;
+    flex-direction: row;
+  
+    div {
+      flex: 50%;
+      padding: 10px;
+    }
+  }
+
+   .outlook {
+    color: black;
+    background: rgba(0,0,0,0.1);
+  }
+
+   .temp {
+    background: lightblue;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+ }
+
+ .big-text {
+    font-size: 30px;
+}
+
+.image {
+    height: 100px;
+}
+.price{
+    margin-top: 10px;
+}
+.content{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.uploadfilecontainer {
+    background-repeat: no-repeat;
+    background-size: 10px;
+    background-position: center;
+    height: 120px;
+    width: 80%;
+    border: 2px dashed #1C8ADB;
+    border-radius: 10px;
+}
+
+.uploadfilecontainer:hover {
+    cursor: pointer;
+    background-color: #9ecbec !important;
+    opacity: 0.8;
+}
