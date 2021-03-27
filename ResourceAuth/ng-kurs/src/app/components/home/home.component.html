@@ -1,12 +1,12 @@
 
-<div class="main-div" *ngFor="let post of posts">
-<mat-card class="example-card">
+<div class="main-div" *ngFor="let post of posts | filter:filterText">
+  <mat-card class="example-card">
     <mat-card-header>
       <div mat-card-avatar class="example-header-image"></div>
       <mat-card-title>Продавец:{{post.seller}}</mat-card-title>
-      <label >Rating <input id="{{post.id}}" type="text" readonly/></label>
+      <app-rating [sellerid]="post.sellerid" [readonl]="true"></app-rating>
     </mat-card-header>
-    <img mat-card-image class="imgcard" src="{{post.imageurl}}" (click)="slotinfo(post.id)"  alt="Photo of a Shiba Inu"/>
+    <img mat-card-image class="imgcard" src="{{post.imageurl}}" (click)="slotinfo(post.id)" alt="Photo of a Shiba Inu" />
     <mat-card-content>
       <p>Текущая цена: {{post.price}}RUB</p>
       <p>

@@ -12,38 +12,31 @@ export const ACCESS_ID = 'slotstore_access_id'
 export class OrdersComponent implements OnInit {
 
   orders: Slots[]
+  userPrice: any;
   userwithmaxprice: any
   constructor(private bs :SlotstoreService) { }
 
   ngOnInit(): void {
-    this.bs.getOrders().subscribe(res => { this.orders = res})
+    this.bs.getOrders().subscribe(res => { this.orders = res["orders"], this.userPrice=res["userprice"]})
   }
-  foo(slotid: string): string{
-    var userid = localStorage.getItem(ACCESS_ID);
-    var user_price;
-    this.bs.getUserPrice(userid, slotid).subscribe(res => { user_price=res});
-    var userprice = $.ajax({ async: false, url: "http://localhost/api/orders/uspri/" + userid + "/" + slotid, type: 'GET' }).responseText;
-    console.log(userprice);
-    console.log(user_price);
-    return user_price;
+  foo(){
+    console.log(this.userPrice)
+    console.log("data");
   }
 
   getmaxprice(id: string){
     this.bs.getuseremail(id).subscribe(res => {
       (<HTMLInputElement>document.getElementById(id)).value = res["username"];
-    },
-      error => {
-        alert("error")
-      }
+    }
     );
   }
-  RemoveOrder(id: number): void {
-    this.bs.removeorder(id).subscribe(res => {
-
-      this.ngOnInit();
+  RemoveOrder(ord: any): void {
+    console.log(ord);
+    this.bs.removeorder(ord.id).subscribe(res => {
+      this.orders.splice(this.orders.indexOf(ord), 1)
     },
       error => {
-        alert("error")
+        alert("REMOVE ERROR")
       }
     );
   }

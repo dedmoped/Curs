@@ -25,10 +25,14 @@ import { ChildComponent } from './components/child/child.component';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {FormsModule,ReactiveFormsModule} from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { RegisterComponent } from './components/register/register.component';
 import { SlotinfoComponent } from './components/slotinfo/slotinfo.component';
 import { ErroComponent } from './components/erro/erro.component';
+import { RatingComponent } from './components/rating/rating.component';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { UserPostsResolve } from './resolvers/slot-posts.resolve';
+import { SlimLoadingBarModule } from 'ng2-slim-loading-bar'
 
 export function tokenGetter(){
   return localStorage.getItem(ACCESS_TOKEN_KEY);
@@ -48,6 +52,7 @@ export function tokenGetter(){
     RegisterComponent,
     SlotinfoComponent,
     ErroComponent,
+    RatingComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,6 +69,7 @@ export function tokenGetter(){
     ReactiveFormsModule,
     MatIconModule,
     MatSelectModule,
+    Ng2SearchPipeModule,
 
     JwtModule.forRoot({
       config:{
@@ -75,13 +81,15 @@ export function tokenGetter(){
     NgbModule
   ],
   providers: [{
-    provide:Auth_API_URL,
-    useValue:environment.authApi
+    provide: Auth_API_URL,
+    useValue: environment.authApi
   },
   {
     provide:Store_API_URL,
     useValue:environment.storeApi
-  }
+    },
+    HomeComponent,
+    UserPostsResolve  
   ],
   bootstrap: [AppComponent]
 })

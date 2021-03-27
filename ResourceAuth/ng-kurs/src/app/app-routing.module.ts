@@ -10,8 +10,12 @@ import {AddslotComponent} from './components/addslot/addslot.component'
 import{RegisterComponent} from './components/register/register.component'
 import { SlotinfoComponent } from './components/slotinfo/slotinfo.component'
 import { ErroComponent } from './components/erro/erro.component';
+import { UserPostsResolve } from './resolvers/slot-posts.resolve';
 const routes: Routes = [
-  {path:'',component:HomeComponent},
+  {
+    path: '', component: HomeComponent, resolve: {
+      userposts: UserPostsResolve
+    } },
   {path:'orders',component:OrdersComponent},
   {path:'auth',component:AuthComponent},
   {path:'upload',component:UploadFileComponent},

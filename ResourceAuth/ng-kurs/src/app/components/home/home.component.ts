@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { from, Observable } from 'rxjs';
 import { Slots } from 'src/app/models/slot';
 import {SlotstoreService} from 'src/app/services/slotstore.service'
@@ -9,7 +9,8 @@ import { element } from 'protractor';
 import { FormControl, Validators } from "@angular/forms"
 import { AuthService } from '../../services/auth.service';
 import { error } from '@angular/compiler/src/util';
-import { tap } from 'rxjs/operators';
+import { tap, filter,map } from 'rxjs/operators';
+import { DataService } from '../../services/data.service';
 export const ACCESS_ID = 'slotstore_access_id'
 @Component({
   selector: 'app-home',
@@ -18,19 +19,17 @@ export const ACCESS_ID = 'slotstore_access_id'
 })
 export class HomeComponent implements OnInit,AfterViewInit {
    Slot:Slots[]=[]
-   posts: Slots[];
+  posts: Observable<Slots[]>;
   userRate: [];
+  filterText: string;
   data: any;
   //ctrl= new FormControl(null,Validators.required);
-  constructor(private bs: SlotstoreService, private http: HttpClient, private route: Router, private auth: AuthService) { }
+  constructor(private bs: SlotstoreService, private router: ActivatedRoute ,  private ds: DataService, private http: HttpClient, private route: Router, private auth: AuthService) { }
    
   ngOnInit(): void {
-    this.bs.getCatalog().subscribe(res=>{this.posts=res, this.posts.forEach((currentvalue,index)=>{
-      $.ajax({
-        url: "http://localhost/api/slots/rate/"+currentvalue.sellerid, success: function(result){
-      (<HTMLInputElement>document.getElementById(currentvalue.id.toString())).value=result;     
-    },error:function(){alert("errr");}});
-    })});
+    this.posts = this.router.snapshot.data.userposts;
+    //this.bs.getCatalog().subscribe(res => { this.posts = res });
+    this.ds.currentMessage.subscribe(message => this.filterText = message);
   }
   
   ngAfterViewInit(){
@@ -39,11 +38,12 @@ export class HomeComponent implements OnInit,AfterViewInit {
   }
   deleteslot(id: number) {
     this.bs.deleteslot(id).subscribe(res => {
-      
+      console.log(res)
+      this.posts = this.posts.pipe(map(pr => pr.filter(slot => slot.id != id)))
     },
       error=>
       {
-        this.ngOnInit();
+        console.log("")
     }
       );
   }

@@ -2,23 +2,31 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, delay } from 'rxjs/operators';
 import { Store_API_URL } from '../app-tokens';
 import { OrdersComponent } from '../components/orders/orders.component';
-import{Slots} from '../models/slot'
+import { Slots } from '../models/slot'
+import { BehaviorSubject } from 'rxjs';
+import { promise } from 'protractor';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SlotstoreService {
+  getCurrentUserRating(sellerid: number) {
+    return this.http.get(`${this.apiUrl}api/slots/getcurrentuserrate/` + sellerid)
+  }
+  setRate(sellerid: number, currentRate: number) {
+    return this.http.post(`${this.apiUrl}api/slots/setrate/` + sellerid + `/` + currentRate, {});
+    }
+
 private baseApiUrl=`${this.apiUrl}api/`;
   constructor(private http: HttpClient,
     @Inject(Store_API_URL) 
     private apiUrl:string) { }
     lol:any;
-  getCatalog():Observable<Slots[]>{
-    return this.http.get<Slots[]>(`${this.baseApiUrl}slots`);
-    
+  getCatalog(): Observable<Slots[]>{
+    return this.http.get<Slots[]>(`${this.baseApiUrl}slots`).pipe(delay(1000));
   }
 
 byeslot(slotid:number,newprice:number){
@@ -66,5 +74,8 @@ updateSlot(slot:Slots,file:File)
   formdata.append("pic",file);
   formdata.append("slot",JSON.stringify(slot));
   return this.http.post(`${this.baseApiUrl}orders/update`,formdata);
+}
+getSlotRating(sellerid:string){
+  return this.http.get(`${this.baseApiUrl}slots/rate/`+sellerid)
 }
 }

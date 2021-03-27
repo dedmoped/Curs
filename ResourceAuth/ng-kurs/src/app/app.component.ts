@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import {AuthService} from './services/auth.service'
+import { HomeComponent } from './components/home/home.component';
+import { DataService } from './services/data.service';
 export const ACCESS_NAME = 'slotstore_access_name'
 
 @Component({
@@ -9,11 +11,16 @@ export const ACCESS_NAME = 'slotstore_access_name'
 })
 export class AppComponent {
   title = 'app';
+  searchText: any;
   public get isLoggedIn():boolean{
     return this.as.isAuthenticated()
   }
-  constructor (private as : AuthService){
+  constructor(private as: AuthService, private ds: DataService) {
 
+  }
+  onChange() {
+    console.log(this.searchText)
+    this.ds.changeMessage(this.searchText);
   }
   login(email:string,password:string){
     this.as.login(email,password).subscribe(res=>
@@ -22,7 +29,7 @@ export class AppComponent {
         alert("Wrong login or password")
       })
   }
-  logout(){
+  logout() {
     this.as.logout() 
   }
   getEmail(): string {

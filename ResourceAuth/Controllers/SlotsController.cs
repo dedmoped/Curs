@@ -34,18 +34,11 @@ namespace ResourceAuth.Controllers
 
         [HttpGet]
         [Route("rate/{id}")]
-        public decimal GetRating(int id)
+        public double GetRating(int id)
         {
             try
             {
-                var retingbyid = store.rating.Where(d => d.Sellerid == id).Select(x => (int)x.Rate).ToArray();
-                decimal summaryrating = 0;
-                foreach (int c in retingbyid)
-                {
-                    summaryrating += c;
-                }
-                summaryrating = Math.Round(summaryrating / retingbyid.Count(), 1);
-                return summaryrating;
+                return store.rating.Where(d => d.Sellerid == id).Average(x => x.Rate);
             }
             catch
             {
@@ -57,30 +50,38 @@ namespace ResourceAuth.Controllers
         [HttpDelete]
         [Authorize(Roles = "user")]
         [Route("deleteslot/{id}")]
-        public string DeleteSlot(int id)
+        public IActionResult DeleteSlot(int id)
         {
             try
             {
                 store.orders.RemoveRange(store.orders.Where(b => b.Slotid == id));
                 store.slots.RemoveRange(store.slots.Where(b => b.Id == id));
                 store.SaveChanges();
-                return "Удалено успешно";
+                return Ok();
             }
             catch
             {
-                return "Ошибка удвления";
+                return BadRequest();
             }
         }
 
         [HttpPost]
 
-        [Route("setrate/{myid}/{id}/{rt}")]
-        public decimal Getuserrate(int myid,int id,int rt)
+        [Route("setrate/{sellerid}/{currentrate}")]
+        public decimal Getuserrate(int sellerid, int currentrate)
         {
-            store.rating.RemoveRange(store.rating.Where(d => d.Sellerid == id && d.Userid==myid));
-            store.rating.Add(new Rating() { Userid = myid, Sellerid = id, Rate = rt });
+            store.rating.RemoveRange(store.rating.Where(d => d.Sellerid == sellerid && d.Userid==UserID));
             store.SaveChanges();
-            return rt;
+            store.rating.Add(new Rating() { Userid = UserID, Sellerid = sellerid, Rate = currentrate });
+            store.SaveChanges();
+            return currentrate;
+        }
+
+        [HttpGet]
+        [Route("getcurrentuserrate/{sellerid}")]
+        public decimal getCurrentRating(int sellerid)
+        {
+            return store.rating.Where(x => x.Sellerid == sellerid && x.Userid == UserID).FirstOrDefault().Rate;
         }
 
         [HttpPost]

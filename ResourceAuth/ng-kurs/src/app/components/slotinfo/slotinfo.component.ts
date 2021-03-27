@@ -3,7 +3,7 @@ import { Slots } from 'src/app/models/slot';
 import { SlotstoreService } from 'src/app/services/slotstore.service'
 import { AuthService } from 'src/app/services/auth.service'
 import {ActivatedRoute} from '@angular/router'
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { Inject, Injectable } from '@angular/core';
 import { Store_API_URL } from 'src/app/app-tokens';
 import {FormControl,Validators} from "@angular/forms"
@@ -18,15 +18,14 @@ export class SlotinfoComponent implements OnInit {
   { 
 this.subscription=route.params.subscribe(params=>this.id=params['id']);
   }
-  
-  slots: Slots[]
+  slots: Observable< Slots[]>
   id: number;
   isauth: boolean;
   ratingnow:string;
   private subscription:Subscription;
   rate= new FormControl(null,Validators.required);
   ngOnInit(): void {
-    this.bs.getOrderById(this.id).subscribe(res => { this.slots = res, this.rate.setValue($.ajax({ async: false, url: `${this.apiUrl}api/slots/rate/` + this.slots[0].sellerid, type: 'GET' }).responseText), this.ratingnow = this.rate.value })
+    this.slots = this.bs.getOrderById(this.id)
     this.isauth=this.auth.isAuthenticated();
   }
 

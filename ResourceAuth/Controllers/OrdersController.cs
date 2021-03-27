@@ -38,7 +38,8 @@ namespace ResourceAuth.Controllers
             var c = store.orders.Where(b=>b.Userid==UserID);
             var sel = c.Select(f => f.Slotid);
             var orderedBooks = store.slots.Where(b => sel.Contains(b.Id));
-            return Ok(orderedBooks);
+            var price = store.orders.Where(d => sel.Contains(d.Slotid) && d.Userid == UserID).FirstOrDefault().Userprice;
+            return Ok(new { orders = orderedBooks, userprice = price });
         }
 
         [HttpGet]

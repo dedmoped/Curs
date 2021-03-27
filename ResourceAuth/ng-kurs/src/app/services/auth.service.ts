@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Inject, Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { Auth_API_URL } from '../app-tokens';
 import { tap } from 'rxjs/operators';
 import { Token } from 'src/app/models/token'

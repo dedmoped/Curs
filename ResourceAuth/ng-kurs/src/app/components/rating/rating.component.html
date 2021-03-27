@@ -1,0 +1,23 @@
+
+<ng-template #t let-fill="fill" let-index="index">
+  <span class="star" [class.full]="fill === 100">
+    <span class="half" [style.width.%]="fill" [class.bad]="index < 2">&#9733;</span>&#9733;
+  </span>
+</ng-template>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg">
+      <ngb-rating [(ngModel)]="currentRate" [starTemplate]="t" [readonly]="false" *ngIf="!readonl" [max]="5" (click)="changerate()"></ngb-rating>
+      <ngb-rating [(rate)]="currentRate" [starTemplate]="t" [readonly]="true" [max]="5" *ngIf="readonl"></ngb-rating>
+    </div>
+    <div class="col-lg text-right" *ngIf="!readonl">
+      <span>Your rate : {{userRating}}</span>
+    </div>
+  </div>
+    <div class="col-sm">
+      <span>Rate: <b>{{current}} </b> </span>
+    </div>
+ 
+  </div>
+
