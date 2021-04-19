@@ -19,8 +19,9 @@ export const ACCESS_ID = 'slotstore_access_id'
 })
 export class HomeComponent implements OnInit,AfterViewInit {
    Slot:Slots[]=[]
-  posts: Observable<Slots[]>;
+  posts: Slots[];
   userRate: [];
+  page: number = 1;
   filterText: string;
   data: any;
   //ctrl= new FormControl(null,Validators.required);
@@ -31,15 +32,17 @@ export class HomeComponent implements OnInit,AfterViewInit {
     //this.bs.getCatalog().subscribe(res => { this.posts = res });
     this.ds.currentMessage.subscribe(message => this.filterText = message);
   }
-  
+  getPosts() {
+    this.bs.getCatalog().subscribe((res) => this.onSuccess(res))   
+  }
   ngAfterViewInit(){
  
-     
   }
   deleteslot(id: number) {
     this.bs.deleteslot(id).subscribe(res => {
-      console.log(res)
-      this.posts = this.posts.pipe(map(pr => pr.filter(slot => slot.id != id)))
+      console.log(id)
+      // this.posts.pipe(map(pr => pr.filter(slot => slot.id != id)))
+      this.posts=this.posts.filter(slot => slot.id != id);
     },
       error=>
       {
@@ -67,4 +70,17 @@ export class HomeComponent implements OnInit,AfterViewInit {
       return false;
     }
   }
+  onSuccess(res) {
+    console.log(res);
+    if (res != undefined) {
+      res.forEach(item => {
+        this.posts.push(item);
+      });
+    }
+  }
+  onScroll() {
+    console.log("Scrolled");
+    this.page = this.page + 1;
+    this.getPhotos();
+  }  
 }

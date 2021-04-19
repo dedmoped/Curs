@@ -31,7 +31,7 @@ export class OrdersComponent implements OnInit {
     );
   }
   RemoveOrder(ord: any): void {
-    console.log(ord);
+    console.log(ord.id);
     this.bs.removeorder(ord.id).subscribe(res => {
       this.orders.splice(this.orders.indexOf(ord), 1)
     },

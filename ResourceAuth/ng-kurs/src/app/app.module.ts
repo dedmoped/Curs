@@ -70,7 +70,7 @@ export function tokenGetter(){
     MatIconModule,
     MatSelectModule,
     Ng2SearchPipeModule,
-
+    SlimLoadingBarModule.forRoot(),
     JwtModule.forRoot({
       config:{
         tokenGetter,
