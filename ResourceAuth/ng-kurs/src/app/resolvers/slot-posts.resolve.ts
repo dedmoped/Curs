@@ -9,6 +9,6 @@ export class UserPostsResolve implements Resolve<Slots[]> {
   constructor(private postService: SlotstoreService) { }
 
   resolve(route: ActivatedRouteSnapshot): Observable<Slots[]> {
-    return this.postService.getCatalog();
+    return this.postService.getCatalog(1);
   }
 } 

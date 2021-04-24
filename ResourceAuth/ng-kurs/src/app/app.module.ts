@@ -32,8 +32,8 @@ import { ErroComponent } from './components/erro/erro.component';
 import { RatingComponent } from './components/rating/rating.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { UserPostsResolve } from './resolvers/slot-posts.resolve';
-import { SlimLoadingBarModule } from 'ng2-slim-loading-bar'
-
+import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export function tokenGetter(){
   return localStorage.getItem(ACCESS_TOKEN_KEY);
 }
@@ -70,6 +70,7 @@ export function tokenGetter(){
     MatIconModule,
     MatSelectModule,
     Ng2SearchPipeModule,
+    MatProgressSpinnerModule,
     SlimLoadingBarModule.forRoot(),
     JwtModule.forRoot({
       config:{

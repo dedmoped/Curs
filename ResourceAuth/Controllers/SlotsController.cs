@@ -26,10 +26,12 @@ namespace ResourceAuth.Controllers
             this.store = store;
         }
         [HttpGet]
-        [Route("")]
-        public IEnumerable<Slots> GetAllSlots()
+        [Route("lotList/{id}")]
+        public IEnumerable<Slots> GetAllSlots(int id)
         {
-            return store.slots.ToList();
+            int skipedpages = id == 1 ? 0 : 5*id;
+            int takepages = id == 1 ? 10 : 5;
+            return store.slots.OrderBy(x=>x.Id).Skip(skipedpages).Take(takepages).ToList();
         }
 
         [HttpGet]

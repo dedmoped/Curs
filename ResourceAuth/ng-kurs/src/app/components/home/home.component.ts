@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, HostListener, ElementRef, QueryList, ViewChildren, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { from, Observable } from 'rxjs';
 import { Slots } from 'src/app/models/slot';
@@ -21,9 +21,12 @@ export class HomeComponent implements OnInit,AfterViewInit {
    Slot:Slots[]=[]
   posts: Slots[];
   userRate: [];
+  loadbar: boolean = false;
   page: number = 1;
   filterText: string;
   data: any;
+  nodata: boolean = false;
+  is_Calback: boolean= false;
   //ctrl= new FormControl(null,Validators.required);
   constructor(private bs: SlotstoreService, private router: ActivatedRoute ,  private ds: DataService, private http: HttpClient, private route: Router, private auth: AuthService) { }
    
@@ -33,11 +36,21 @@ export class HomeComponent implements OnInit,AfterViewInit {
     this.ds.currentMessage.subscribe(message => this.filterText = message);
   }
   getPosts() {
-    this.bs.getCatalog().subscribe((res) => this.onSuccess(res))   
+    this.is_Calback = true;
+    this.page = this.page + 1;
+    console.log(this.page);
+    this.loadbar = true;
+    this.bs.getCatalog(this.page).subscribe((res) => this.onSuccess(res))   
   }
-  ngAfterViewInit(){
+  loading: boolean = true
+  onLoad() {
+    this.loading = false;
+  }
+  ngAfterViewInit() {
  
   }
+
+
   deleteslot(id: number) {
     this.bs.deleteslot(id).subscribe(res => {
       console.log(id)
@@ -71,16 +84,52 @@ export class HomeComponent implements OnInit,AfterViewInit {
     }
   }
   onSuccess(res) {
+    this.is_Calback = false;
     console.log(res);
-    if (res != undefined) {
+    if (res != undefined && res.length != 0) {
       res.forEach(item => {
         this.posts.push(item);
       });
     }
+    else {
+      this.nodata = true;
+    }
+    this.loadbar = false;
   }
-  onScroll() {
-    console.log("Scrolled");
-    this.page = this.page + 1;
-    this.getPhotos();
-  }  
+
+  //@HostListener("window:scroll", ["$event"])
+  //onWindowScroll() {
+  //  //In chrome and some browser scroll is given to body tag
+  //  let pos = (document.documentElement.scrollTop || document.body.scrollTop) + document.documentElement.offsetHeight;
+  //  let max = document.documentElement.scrollHeight;
+  //  // pos/max will give you the distance between scroll bottom and and bottom of screen in percentage.
+  //  if (max == pos) {
+  //    this.page = this.page + 1;
+  //    this.getPosts();
+  //  }
+  //  console.log(max)
+  //  console.log(pos)
+  //}
+
+  @HostListener("window:scroll", [])
+  onScroll(): void {
+    if (!this.nodata) {
+      if (this.bottomReached()) {
+        var scrollHeight = Math.max(
+          document.body.scrollHeight, document.documentElement.scrollHeight,
+          document.body.offsetHeight, document.documentElement.offsetHeight,
+          document.body.clientHeight, document.documentElement.clientHeight
+        );
+
+        if (scrollHeight - document.documentElement.offsetHeight - window.scrollY <= 100) {
+          if (!this.is_Calback)
+          this.getPosts();
+        }
+      }
+    }
+  }
+
+  bottomReached(): boolean {
+    return (window.innerHeight + window.scrollY) >= document.body.offsetHeight;
+  }
 }

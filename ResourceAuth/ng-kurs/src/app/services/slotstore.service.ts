@@ -24,9 +24,9 @@ private baseApiUrl=`${this.apiUrl}api/`;
   constructor(private http: HttpClient,
     @Inject(Store_API_URL) 
     private apiUrl:string) { }
-    lol:any;
-  getCatalog(): Observable<Slots[]>{
-    return this.http.get<Slots[]>(`${this.baseApiUrl}slots`).pipe(delay(1000));
+  lol: any;
+  getCatalog(numb: number): Observable<Slots[]>{
+    return this.http.get<Slots[]>(`${this.baseApiUrl}slots/lotList/` + numb).pipe(delay(1000));
   }
 
 byeslot(slotid:number,newprice:number){
