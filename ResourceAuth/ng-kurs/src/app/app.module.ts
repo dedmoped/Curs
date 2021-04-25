@@ -34,6 +34,10 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { UserPostsResolve } from './resolvers/slot-posts.resolve';
 import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { NguiComponent } from './components/ngui/ngui.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+
 export function tokenGetter(){
   return localStorage.getItem(ACCESS_TOKEN_KEY);
 }
@@ -53,6 +57,8 @@ export function tokenGetter(){
     SlotinfoComponent,
     ErroComponent,
     RatingComponent,
+    NguiComponent,
+    ConfirmationDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -71,6 +77,7 @@ export function tokenGetter(){
     MatSelectModule,
     Ng2SearchPipeModule,
     MatProgressSpinnerModule,
+    MatDialog,
     SlimLoadingBarModule.forRoot(),
     JwtModule.forRoot({
       config:{

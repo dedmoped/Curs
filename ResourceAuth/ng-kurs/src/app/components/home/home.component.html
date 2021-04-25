@@ -6,9 +6,9 @@
       <mat-card-title>Продавец:{{post.seller}}</mat-card-title>
       <app-rating [sellerid]="post.sellerid" [readonl]="true"></app-rating>
     </mat-card-header>
-    <ngui-in-view>
-      <img mat-card-image class="imgcard" src="{{post.imageurl}}" (click)="slotinfo(post.id)" alt="Photo of a Shiba Inu" />
-      </ngui-in-view>
+    <app-ngui>
+      <img mat-card-image class="imgcard" *ngIf src="{{post.imageurl}}" (click)="slotinfo(post.id)" alt="Photo of a Shiba Inu" />
+      </app-ngui>
       <mat-card-content>
         <p>Текущая цена: {{post.price}}RUB</p>
         <p>

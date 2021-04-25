@@ -11,6 +11,8 @@ import { AuthService } from '../../services/auth.service';
 import { error } from '@angular/compiler/src/util';
 import { tap, filter,map } from 'rxjs/operators';
 import { DataService } from '../../services/data.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 export const ACCESS_ID = 'slotstore_access_id'
 @Component({
   selector: 'app-home',
@@ -28,7 +30,7 @@ export class HomeComponent implements OnInit,AfterViewInit {
   nodata: boolean = false;
   is_Calback: boolean= false;
   //ctrl= new FormControl(null,Validators.required);
-  constructor(private bs: SlotstoreService, private router: ActivatedRoute ,  private ds: DataService, private http: HttpClient, private route: Router, private auth: AuthService) { }
+  constructor(private bs: SlotstoreService, private router: ActivatedRoute ,  private ds: DataService, private http: HttpClient, private route: Router, private auth: AuthService,public dialog: MatDialog) { }
    
   ngOnInit(): void {
     this.posts = this.router.snapshot.data.userposts;
@@ -52,16 +54,20 @@ export class HomeComponent implements OnInit,AfterViewInit {
 
 
   deleteslot(id: number) {
-    this.bs.deleteslot(id).subscribe(res => {
-      console.log(id)
-      // this.posts.pipe(map(pr => pr.filter(slot => slot.id != id)))
-      this.posts=this.posts.filter(slot => slot.id != id);
-    },
-      error=>
-      {
-        console.log("")
-    }
-      );
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.bs.deleteslot(id).subscribe(res => {
+          console.log(id)
+          // this.posts.pipe(map(pr => pr.filter(slot => slot.id != id)))
+          this.posts=this.posts.filter(slot => slot.id != id);
+        },
+          error=>
+          {
+            console.log("")
+        });
+      }
+    })
   }
   
   addorder(id:number):void{

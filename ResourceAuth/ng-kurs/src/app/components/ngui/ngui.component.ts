@@ -12,20 +12,17 @@ import {
   Renderer2,
   TemplateRef,
   ViewChild
-} from '@angular/core';
+ } from '@angular/core';
 
 import { isPlatformBrowser } from '@angular/common';
 
-
 @Component({
-  selector: 'ngui-in-view',
-  template: `
-    <ng-container *ngIf="inView" [ngTemplateOutlet]="template">
-    </ng-container>
-  `,
-  styles: [':host {display: block;}']
+  selector: 'app-ngui',
+  templateUrl: './ngui.component.html',
+  styleUrls: ['./ngui.component.scss']
 })
-export class NguiInViewComponent implements OnInit, OnDestroy {
+export class NguiComponent implements OnInit,OnDestroy {
+
   observer: IntersectionObserver;
   inView: boolean = false;
   once50PctVisible: boolean = false;

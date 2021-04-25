@@ -11,16 +11,19 @@ import{RegisterComponent} from './components/register/register.component'
 import { SlotinfoComponent } from './components/slotinfo/slotinfo.component'
 import { ErroComponent } from './components/erro/erro.component';
 import { UserPostsResolve } from './resolvers/slot-posts.resolve';
+import { 
+  AuthGuardService as AuthGuard 
+} from './services/auth-guard.service';
 const routes: Routes = [
   {
     path: '', component: HomeComponent, resolve: {
       userposts: UserPostsResolve
     } },
-  {path:'orders',component:OrdersComponent},
+  {path:'orders',component:OrdersComponent,canActivate: [AuthGuard] },
   {path:'auth',component:AuthComponent},
-  {path:'upload',component:UploadFileComponent},
-  {path:'update/:id',component:UpdateComponent},
-  {path:'addslot',component:AddslotComponent},
+  {path:'upload',component:UploadFileComponent,canActivate: [AuthGuard]},
+  {path:'update/:id',component:UpdateComponent,canActivate: [AuthGuard]},
+  {path:'addslot',component:AddslotComponent,canActivate: [AuthGuard]},
   {path:'register',component:RegisterComponent},
   { path: 'slotinfo/:id', component: SlotinfoComponent },
   { path: '**', component: ErroComponent },
