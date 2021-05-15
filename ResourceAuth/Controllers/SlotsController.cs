@@ -24,10 +24,21 @@ namespace ResourceAuth.Controllers
         public SlotsController(ApplicationContext store)
         {
             this.store = store;
+            if (!store.lotTypes.Any())
+            {
+                store.lotTypes.Add(new LotType() { lotType = "Мобильные телефоны", Description = "Иформация о мобильных телефонах" });
+                store.lotTypes.Add(new LotType() { lotType = "Автомобили", Description = "Иформация об автомобилях телефонах" });
+                store.lotTypes.Add(new LotType() { lotType = "Ноутбуки", Description = "Иформация о мобильных телефонах" });
+                store.lotTypes.Add(new LotType() { lotType = "Детские товары", Description = "Иформация о мобильных телефонах" });
+                store.lotTypes.Add(new LotType() { lotType = "Игры", Description = "Иформация о мобильных телефонах" });
+                store.lotTypes.Add(new LotType() { lotType = "Книги", Description = "Иформация о мобильных телефонах" });
+                store.lotTypes.Add(new LotType() { lotType = "Спорт", Description = "Иформация о мобильных телефонах" });
+                store.SaveChanges();
+            }
         }
         [HttpGet]
         [Route("lotList/{id}")]
-        public IEnumerable<Slots> GetAllSlots(int id)
+        public IEnumerable<Lots> GetAllSlots(int id)
         {
             int skipedpages = id == 1 ? 0 : 5*id;
             int takepages = id == 1 ? 10 : 5;
@@ -92,11 +103,18 @@ namespace ResourceAuth.Controllers
         public void ByeSlot(int slotid,int newprice)
         {
             store.orders.RemoveRange(store.orders.Where(d => d.Slotid==slotid && d.Userid == UserID));
-            store.slots.Where(sl => sl.Id == slotid).FirstOrDefault().Price = newprice;
+            store.slots.Where(sl => sl.Id == slotid).FirstOrDefault().Cost = newprice;
             store.orders.Add(new Orders() { Slotid = slotid, Userid = UserID, Userprice = newprice });
             store.SaveChanges();
         }
 
+        [HttpGet]
+        [Authorize]
+        [Route("Type")]
+        public IEnumerable<LotType> LotType()
+        {
+            return store.lotTypes.ToList();
+        }
       
         [HttpPost]
         [Authorize(Roles = "user")]
@@ -105,12 +123,12 @@ namespace ResourceAuth.Controllers
         {
             
             file = pic;
-            Slots add = JsonConvert.DeserializeObject<Slots>(slotinfo);
+            Lots add = JsonConvert.DeserializeObject<Lots>(slotinfo);
             var task = Task.Run((Func<Task>)SlotsController.Run);
             task.Wait();
            // store.orders.RemoveRange(store.orders.Where(d => d.Slotid == add.Id && d.Userid == UserID));
             string c = store.accounts.Where(b => b.Id == UserID).SingleOrDefault().Email;
-            Slots newSlot = new Slots() {Description=add.Description,Seller=c,Price=add.Price,Sellerid=UserID,Imageurl=str};
+            Lots newSlot = new Lots() {Description=add.Description,Seller=c,Cost=add.Cost,user_id=UserID,EndDate=add.EndDate,StartDate=add.StartDate,status_id=add.status_id,Title=add.Title,type_id=add.type_id,Imageurl=str};
             store.slots.Add(newSlot);
             store.SaveChanges();
         }

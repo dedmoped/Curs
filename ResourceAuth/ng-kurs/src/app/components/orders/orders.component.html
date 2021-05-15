@@ -1,16 +1,40 @@
-<div class="container">
-<div class="card mb-3" *ngFor=" let ord of orders">
+<!--<div class="container">
+  <div class="card mb-3" *ngFor=" let ord of orders">
+    <app-count-down [dDay]="ord.startDate" [dDayEnd]="ord.endDate"> </app-count-down>
     <a href="/slotinfo/{{ord.id}}">
-    <img class="card-img-top"  src="{{ord.imageurl}}" alt="Card image cap">
+      <img class="card-img-top" src="{{ord.imageurl}}" alt="Card image cap">
     </a>
     <div class="card-body">
       <h5 class="card-title">{{ord.seller}}</h5>
       <p class="card-text">{{ord.description}}</p>
-      <p class="card-text">Текущая цена {{ord.price}} RUB</p>
+      <p class="card-text">Текущая цена {{ord.cost}} RUB</p>-->
       <!--<p class="card-text">Ваша цена {{foo(ord.id)}} RUB </p>-->
       <!--<p class="card-text">Наибольшую цену дал <input  readonly id="{{ord.id}}"/> {{getmaxprice(ord.id)}} RUB </p>-->
-      <button class="btn-danger" (click)="RemoveOrder(ord)">Delete</button>
+      <!--<button class="btn-danger" (click)="RemoveOrder(ord)">Delete</button>
+    </div>
+  </div>-->
+<!--</div>-->
 
-    </div>
-    </div>
-</div>
+<div class="main-div" *ngFor="let ord of orders | filter:filterText">
+  <mat-card class="example-card">
+    <mat-card-header>
+      <div mat-card-avatar class="example-header-image"></div>
+      <mat-card-title>Продавец:{{ord.seller}}</mat-card-title>
+      <app-rating [sellerid]="ord.user_id" [readonl]="true"></app-rating>
+    </mat-card-header>
+    <app-count-down [dDay]="ord.startDate" [dDayEnd]="ord.endDate"> </app-count-down>
+    <a href="/slotinfo/{{ord.id}}">
+      <app-ngui>
+        <img mat-card-image class="imgcard" *ngIf src="{{ord.imageurl}}" (click)="slotinfo(post.id)" alt="Photo of a Shiba Inu" />
+      </app-ngui>
+    </a>
+    <mat-card-content>
+      <h5 class="card-title">{{ord.seller}}</h5>
+      <p class="card-text">{{ord.description}}</p>
+      <p class="card-text">Текущая цена {{ord.cost}} RUB</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button class="btn-danger" (click)="RemoveOrder(ord)">Delete</button>
+    </mat-card-actions>
+  </mat-card>
+  </div>

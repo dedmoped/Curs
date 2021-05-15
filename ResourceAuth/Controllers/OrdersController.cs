@@ -34,7 +34,7 @@ namespace ResourceAuth.Controllers
         [Route("")]
         public IActionResult GetOrders()
         {
-            if (!store.orders.Where(b => b.Userid == UserID).Select(g=>g.Userid).Contains(UserID)) return Ok(Enumerable.Empty<Slots>());
+            if (!store.orders.Where(b => b.Userid == UserID).Select(g=>g.Userid).Contains(UserID)) return Ok(Enumerable.Empty<Lots>());
             var c = store.orders.Where(b=>b.Userid==UserID);
             var sel = c.Select(f => f.Slotid);
             var orderedBooks = store.slots.Where(b => sel.Contains(b.Id));
@@ -102,13 +102,15 @@ namespace ResourceAuth.Controllers
         [HttpPost]
         [Authorize(Roles = "user")]
         [Route("photo")]
-        public string AddFoto([FromForm] IFormFile upload_file,[FromBody]Slots slots)
+        public string AddFoto([FromForm] IFormFile upload_file,[FromBody]Lots slots)
         {
 
             file1 = upload_file;
             var task = Task.Run((Func<Task>)OrdersController.Run);
             task.Wait();
-            store.slots.Add(new Slots() { Description = slots.Description, Price = slots.Price, Seller = slots.Seller, Imageurl = str });
+            slots.Imageurl = str;
+            slots.user_id = UserID;
+            store.slots.Add(slots);
             return str;
             
         }
@@ -126,8 +128,8 @@ namespace ResourceAuth.Controllers
         public void updateslot([FromForm] IFormFile pic, [FromForm] string slot)
         {
 
-            Slots info = JsonConvert.DeserializeObject<Slots>(slot);
-            var updatedata = store.slots.Where(b => b.Id == info.Id && b.Sellerid == UserID).FirstOrDefault();
+            Lots info = JsonConvert.DeserializeObject<Lots>(slot);
+            var updatedata = store.slots.Where(b => b.Id == info.Id && b.user_id == UserID).FirstOrDefault();
             if (updatedata != null)
             {
                 file1 = pic;
@@ -137,8 +139,8 @@ namespace ResourceAuth.Controllers
                     task.Wait();
                     store.slots.Where(b => b.Id == info.Id).FirstOrDefault().Imageurl = str;
                 }
-                store.slots.Where(b => b.Id == info.Id && b.Sellerid == UserID).FirstOrDefault().Description = info.Description;
-                store.slots.Where(b => b.Id == info.Id).FirstOrDefault().Price = info.Price;
+                store.slots.Where(b => b.Id == info.Id && b.user_id == UserID).FirstOrDefault().Description = info.Description;
+                store.slots.Where(b => b.Id == info.Id).FirstOrDefault().Cost = info.Cost;
                 store.slots.Where(b => b.Id == info.Id).FirstOrDefault().Seller = info.Seller;
                 store.SaveChanges();
             }

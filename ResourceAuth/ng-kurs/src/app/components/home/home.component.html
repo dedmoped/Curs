@@ -4,22 +4,23 @@
     <mat-card-header>
       <div mat-card-avatar class="example-header-image"></div>
       <mat-card-title>Продавец:{{post.seller}}</mat-card-title>
-      <app-rating [sellerid]="post.sellerid" [readonl]="true"></app-rating>
+      <app-rating [sellerid]="post.user_id" [readonl]="true"></app-rating>
+      <app-count-down [dDay]="post.startDate" [dDayEnd]="post.endDate"> </app-count-down>
     </mat-card-header>
     <app-ngui>
       <img mat-card-image class="imgcard" *ngIf src="{{post.imageurl}}" (click)="slotinfo(post.id)" alt="Photo of a Shiba Inu" />
-      </app-ngui>
-      <mat-card-content>
-        <p>Текущая цена: {{post.price}}RUB</p>
-        <p>
-          {{post.description}}
-        </p>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button class="btn-primary" (click)="addorder(post.id)" *ngIf="auth.isAuthenticated()">Add</button>
-        <button mat-button class="btn-secondary" (click)="updateslot(post.id)" *ngIf="userslot(post.sellerid)">Update</button>
-        <button mat-button class="btn-warning" (click)="deleteslot(post.id)" *ngIf="userslot(post.sellerid)">Delete</button>
-      </mat-card-actions>
-</mat-card>
+    </app-ngui>
+    <mat-card-content>
+      <p>Текущая цена: {{post.cost}}RUB</p>
+      <p>
+        {{post.description}}
+      </p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button class="btn-primary" (click)="addorder(post.id)" *ngIf="auth.isAuthenticated()">Add</button>
+      <button mat-button class="btn-secondary" (click)="updateslot(post.id)" *ngIf="userslot(post.user_id)">Update</button>
+      <button mat-button class="btn-warning" (click)="deleteslot(post.id)" *ngIf="userslot(post.user_id)">Delete</button>
+    </mat-card-actions>
+  </mat-card>
 </div>
 <mat-spinner style="margin:0 auto;" *ngIf="loadbar"></mat-spinner>

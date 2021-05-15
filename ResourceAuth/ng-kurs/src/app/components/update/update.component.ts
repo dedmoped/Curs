@@ -43,8 +43,8 @@ this.subscription=route.params.subscribe(params=>this.id=params['id']);
 }
   updateslot(id:number,seller:string,price:number,description:string):void{
    this.changes.id=id;
-   this.changes.seller=seller;
-   this.changes.price=price.toString();
+    this.changes.seller = seller;
+    this.changes.cost = price.toString();
    this.changes.description=description;
    this.bs.updateSlot(this.changes,this.files[0]).subscribe();
     }

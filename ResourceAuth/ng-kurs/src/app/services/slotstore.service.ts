@@ -49,6 +49,10 @@ getOrderById(id:number):Observable<Slots[]>
     return this.http.delete <string>(`${this.baseApiUrl}slots/deleteslot/` + id)
   }
 
+  getTypes() {
+    return this.http.get(`${this.baseApiUrl}slots/Type`);
+  }
+
   removeorder(id: number) {
     return this.http.delete(`${this.baseApiUrl}orders/deleteorder/` + id)
   }

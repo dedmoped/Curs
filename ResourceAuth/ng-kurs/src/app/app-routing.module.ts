@@ -14,6 +14,7 @@ import { UserPostsResolve } from './resolvers/slot-posts.resolve';
 import { 
   AuthGuardService as AuthGuard 
 } from './services/auth-guard.service';
+import { UserpageComponent } from './components/userpage/userpage.component';
 const routes: Routes = [
   {
     path: '', component: HomeComponent, resolve: {
@@ -26,6 +27,7 @@ const routes: Routes = [
   {path:'addslot',component:AddslotComponent,canActivate: [AuthGuard]},
   {path:'register',component:RegisterComponent},
   { path: 'slotinfo/:id', component: SlotinfoComponent },
+  {path:'userpage',component:UserpageComponent},
   { path: '**', component: ErroComponent },
 ];
 @NgModule({

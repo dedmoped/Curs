@@ -2,7 +2,11 @@ export class Slots{
     id:number;
     seller:string;
     description:string;
-    price:string;
+    cost:string;
     imageurl:string;
-    sellerid:number;
+  user_id: number;
+  title: string;
+  startDate: Date;
+  endDate: Date;
+  type_id: number;
 }

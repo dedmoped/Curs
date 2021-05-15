@@ -28,14 +28,22 @@ export class HomeComponent implements OnInit,AfterViewInit {
   filterText: string;
   data: any;
   nodata: boolean = false;
-  is_Calback: boolean= false;
+  is_Calback: boolean = false;
+  myToday: any;
+  today = new Date();
   //ctrl= new FormControl(null,Validators.required);
   constructor(private bs: SlotstoreService, private router: ActivatedRoute ,  private ds: DataService, private http: HttpClient, private route: Router, private auth: AuthService,public dialog: MatDialog) { }
    
   ngOnInit(): void {
+    this.myToday = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), 0, this.today.getMinutes() + 60, 0);
+    setInterval(() => { this.myToday -= 100, this.convertTodate() }, 1000);
     this.posts = this.router.snapshot.data.userposts;
     //this.bs.getCatalog().subscribe(res => { this.posts = res });
     this.ds.currentMessage.subscribe(message => this.filterText = message);
+    
+  }
+  convertTodate() {
+    return this.today.toISOString().substring(0, 16);
   }
   getPosts() {
     this.is_Calback = true;

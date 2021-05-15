@@ -6,6 +6,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { Auth_API_URL } from '../app-tokens';
 import { tap } from 'rxjs/operators';
 import { Token } from 'src/app/models/token'
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 export const ACCESS_TOKEN_KEY = 'slotstore_access_token'
 export const ACCESS_ID = 'slotstore_access_id'
@@ -15,6 +16,9 @@ export const ACCESS_NAME = 'slotstore_access_name'
   providedIn: 'root'
 })
 export class AuthService {
+  register(email: string, password: string, phone: string, name: string) {
+    return this.http.post(`${this.apiUrl}api/auth/register`, { "Email":email,"Password":password,"Mobile":phone,"Name":name})
+  }
 
   constructor(private http: HttpClient,
     @Inject(Auth_API_URL) private apiUrl: string,

@@ -37,13 +37,13 @@ namespace ResourceAuth.Controllers
             return Unauthorized();
         }
 
-        [Route("register/{email}/{password}")]
+        [Route("register")]
         [HttpPost]
-        public string Register(string email,string password)
+        public string Register([FromBody]Accounts acc)
         {
             try
             {
-                db.accounts.Add(new Accounts() { Email = email, Password = password, Role = "user" });
+                db.accounts.Add(new Accounts() { Email = acc.Email, Password = acc.Password, RoleId = 1,Mobile= acc.Mobile,Name=acc.Name});
                 db.SaveChanges();
                 return "Решисрация прошла успешно";
             }
@@ -71,7 +71,7 @@ namespace ResourceAuth.Controllers
                 new Claim(JwtRegisteredClaimNames.Sub,user.Id.ToString())
             };
             
-                claims.Add(new Claim("role", user.Role.ToString()));
+                claims.Add(new Claim("role", user.RoleId == 1?"user":"admin"));
             
             var token = new JwtSecurityToken(authParams.Issuer,
                 authParams.Audience,

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Inject, Injectable } from '@angular/core';
 import { Store_API_URL } from 'src/app/app-tokens';
 import { FormGroup, FormControl, Validators,FormBuilder } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -11,7 +12,7 @@ import { FormGroup, FormControl, Validators,FormBuilder } from '@angular/forms';
 
 export class RegisterComponent implements OnInit {
 
-  constructor(private route: Router, @Inject(Store_API_URL) private apiUrl: string, private formBuilder: FormBuilder) { }
+  constructor(private route: Router, @Inject(Store_API_URL) private apiUrl: string, private formBuilder: FormBuilder, private au: AuthService) { }
   Roles: any = ['admin', 'author', 'user'];
   registerForm: FormGroup;
   submitted = false;
@@ -19,6 +20,8 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
+      name: ['', [Validators.required]],
+      phone: ['', [Validators.required,Validators.pattern("[0-9]{12}")]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
     }, {
@@ -28,6 +31,7 @@ export class RegisterComponent implements OnInit {
   }
 
   login(email: string, password: string) {
+
     alert($.ajax({async:false,url: `${this.apiUrl}api/auth/register/`+email+"/"+password,type:'POST'}).responseText);
     this.route.navigate(["auth"]);
   }
@@ -41,7 +45,8 @@ export class RegisterComponent implements OnInit {
     if (this.registerForm.invalid) {
       return;
     }
-    this.login(this.registerForm.controls['email'].value, this.registerForm.controls['password'].value);
+    this.au.register(this.registerForm.controls['email'].value, this.registerForm.controls['password'].value, this.registerForm.controls['phone'].value, this.registerForm.controls['name'].value).subscribe(res => alert(res), err => alert(err));
+    //this.login(this.registerForm.controls['email'].value, this.registerForm.controls['password'].value);
   }
 
 }

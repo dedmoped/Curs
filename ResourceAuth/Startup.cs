@@ -92,7 +92,7 @@ namespace ResourceAuth
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ng-kurs";
-                spa.Options.StartupTimeout = new System.TimeSpan(0, 10, 0);
+                spa.Options.StartupTimeout = new System.TimeSpan(0, 15, 0);
                 if (env.IsDevelopment())
                 {
                     spa.UseAngularCliServer(npmScript: "start");

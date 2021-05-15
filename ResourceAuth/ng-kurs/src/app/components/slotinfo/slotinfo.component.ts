@@ -7,6 +7,7 @@ import { Subscription, Observable } from 'rxjs';
 import { Inject, Injectable } from '@angular/core';
 import { Store_API_URL } from 'src/app/app-tokens';
 import {FormControl,Validators} from "@angular/forms"
+import { map } from 'jquery';
 @Component({
   selector: 'app-slotinfo',
   templateUrl: './slotinfo.component.html',
@@ -18,32 +19,30 @@ export class SlotinfoComponent implements OnInit {
   { 
 this.subscription=route.params.subscribe(params=>this.id=params['id']);
   }
-  slots: Observable< Slots[]>
+  slots: Slots[] = [];
+  firstslot: Slots[];
   id: number;
   isauth: boolean;
   ratingnow:string;
   private subscription:Subscription;
   rate= new FormControl(null,Validators.required);
   ngOnInit(): void {
-    this.slots = this.bs.getOrderById(this.id)
+   this.bs.getOrderById(this.id).subscribe(res => { this.slots=res })
     this.isauth=this.auth.isAuthenticated();
   }
 
   takeslot(newprice: number) {
-    if (newprice > Number.parseInt(this.slots[0].price)) {
-      this.bs.byeslot(this.slots[0].id, newprice).subscribe()
-    }
-    else {
-      alert("установите другую цену")
-    }
+
+    console.log(this.slots);
+    this.bs.byeslot(this.slots[0].id, newprice).subscribe()
   }
   lol() {
     alert("kek")
   }
   changerate(){
-    var thisuser=localStorage.getItem('slotstore_access_id');
-    var number = $.ajax({ async: false, url: `${this.apiUrl}api/slots/setrate/` +thisuser+"/"+this.slots[0].sellerid+"/"+this.rate.value,type:'POST'}).responseText;
+    var thisuser = localStorage.getItem('slotstore_access_id');
+    var number = $.ajax({ async: false, url: `${this.apiUrl}api/slots/setrate/` + thisuser + "/" + this.slots[0].user_id + "/" + this.rate.value, type: 'POST' }).responseText;
     this.rate.setValue(Math.round(parseInt(number)))
-    this.ratingnow = $.ajax({ async: false, url: `${this.apiUrl}api/slots/rate/`+this.slots[0].sellerid,type:'GET'}).responseText;
+    this.ratingnow = $.ajax({ async: false, url: `${this.apiUrl}api/slots/rate/` + this.slots[0].cost, type: 'GET' }).responseText;
   }
 }

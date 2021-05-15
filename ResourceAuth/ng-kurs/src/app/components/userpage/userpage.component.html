@@ -1,0 +1,104 @@
+<br/>
+<div *ngIf="showForm" class="d-flex justify-content-center">
+    <div  class="uploadfilecontainer" (click)="fileInput.click()" *ngIf="!checkphoto()" appDragDrop
+                   (onFileDropped)="uploadFile($event)">
+                <input hidden type="file"  formControlName="ImageUrl" accept="image/*" #fileInput (change)="uploadFile($event.target.files)">
+              </div>
+              <div class="outlook"  (click)="removephoto()">
+                <img class="image" width="300px" [src]="imgUrl[0]" *ngIf="checkphoto()" />
+              </div>
+              
+</div>
+<div *ngIf="!showForm" class="d-flex justify-content-center">
+              <div class="outlook">
+                <img class="image" width="300px" [src]="account[0].imageUrl" />
+              </div>
+              
+</div>
+<br/>
+<form *ngIf="showForm" [formGroup]="userpageValidation" (ngSubmit)="onSubmit()">
+<div class="form-group row">
+    <div class="col-md-6 offset-md-3">
+        <label for="example-text-input" class="col-form-label">Описание</label>
+      <input class="form-control" type="text" formControlName="Title"  id="example-text-input">
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-md-6 offset-md-3"><label for="example-name-input" class="col-form-label">Name</label>
+      <input class="form-control" type="text" formControlName="Name"   id="example-name-input">
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-md-6 offset-md-3"><label for="example-email-input" class="col-form-label">Email</label>
+      <input class="form-control" type="email" formControlName="Email"  id="example-email-input">
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-md-6 offset-md-3">
+        <label for="example-tel-input" class="col-form-label">Phone</label>
+      <input class="form-control" type="tel" formControlName="Phone"  placeholder="375(44)7032803" id="example-tel-input">
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-md-6 offset-md-3">
+        <label for="example-password-input"  class="col-form-label">Password</label>
+        <input type="password" formControlName="password" class="form-control"   [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+            <div *ngIf="f.password.errors.required">Password is required</div>
+            <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+          </div>
+    </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-6 offset-md-3">
+            <label for="example-ConfirmPassword-input"  class="col-form-label">ConfirmPassword</label>
+            <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
+            <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
+              <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
+              <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
+            </div>
+        </div>
+        </div>
+  
+    <div class="form-group row">
+        <div class="col-md-6 offset-md-3">
+    <button class="btn btn-primary">Сохранить</button>
+    </div>
+    </div>
+      </form>
+      <form *ngIf="!showForm">
+        <div class="form-group row">
+            <div class="col-md-6 offset-md-3">
+                <label class="col-form-label">Описание</label>
+              <input class="form-control" type="text"  value="{{account[0].description}}" id="example-text-input">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6 offset-md-3"><label class="col-form-label">Name</label>
+              <input class="form-control" type="text"  value="{{account[0].name}}" id="example-name-input">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6 offset-md-3"><label  class="col-form-label">Email</label>
+              <input class="form-control" type="email"  value="{{account[0].email}}" id="example-email-input">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6 offset-md-3">
+                <label  class="col-form-label">Phone</label>
+              <input class="form-control" type="tel"  placeholder="375(44)7032803" value="{{account[0].mobile}}" id="example-tel-input">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6 offset-md-3">
+                <label  class="col-form-label">Password</label>
+                <input type="password"  class="form-control" value="{{account[0].password}}" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+                <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                    <div *ngIf="f.password.errors.required">Password is required</div>
+                    <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+                  </div>
+            </div>
+            </div>
+              </form>
+      <button class="btn btn-secondary" *ngIf="!showForm" (click)="shoForm()" >Изменить</button> 
+      <button class="btn btn-secondary" *ngIf="showForm" (click)="hideForm()" >Вернуться</button> 

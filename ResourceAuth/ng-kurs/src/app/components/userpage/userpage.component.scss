@@ -1,0 +1,17 @@
+.uploadfilecontainer {
+    background-repeat: no-repeat;
+    background-size: 10px;
+    background-position: center;
+    height: 300px;
+    width: 15%;
+    border: 2px dashed #1C8ADB;
+    border-radius: 10px;
+}
+
+.uploadfilecontainer:hover {
+    cursor: pointer;
+    background-color: #9ecbec !important;
+    opacity: 0.8;
+}
+input.ng-touched.ng-invalid {border:solid red 2px;}
+input.ng-touched.ng-valid {border:solid green 2px;}

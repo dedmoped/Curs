@@ -2,27 +2,81 @@
     <mat-card class="mat-elevation-z5 example-card">
         <mat-card-header>
           <mat-card-title>Добавление лота</mat-card-title>
-          <mat-card-subtitle><input  value="Slot timeout" #seller/></mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <div class="flex-row">
-                <div class="temp">
-                    <textarea rows="4" cols="30" #text></textarea>
-                </div>
-                <div class="uploadfilecontainer" (click)="fileInput.click()" appDragDrop
-                (onFileDropped)="uploadFile($event)">
-                   <input hidden type="file" accept="image/*" #fileInput (change)="uploadFile($event.target.files)">
-                 </div>
-                  <div class="outlook">
-                    <img class="image" src="https://openweathermap.org/img/wn/02d@2x.png" *ngIf="!checkphoto()" />
-                    <img class="image" [src]="imgUrl[0]" *ngIf="checkphoto()" />
-                  </div>
+          <form  [formGroup]="slotValidation">
+          <p>
+            <mat-form-field appearance="legacy">
+              <mat-label>Title</mat-label>
+              <input type="text" matInput placeholder="Название" formControlName="Title" id="Title" #seller>
+              <mat-error *ngIf="slotValidation.get('Title').hasError('required')">
+                First Name is Required!
+              </mat-error>
+            </mat-form-field>
+          </p>
+          <mat-grid-list cols="4" rowHeight="100px">
+            <p>Описание</p>
+            <mat-grid-tile 
+            [colspan]="3"
+            [rowspan]="2"> 
+            <div class="form-group green-border-focus">
+              <textarea class="form-control" id="exampleFormControlTextarea5"  rows="5" cols="50" #text></textarea>
+            </div>
+          </mat-grid-tile>
+            <mat-grid-tile 
+            [colspan]="1"
+            [rowspan]="2">
+            <div *ngIf="!checkphoto()" class="uploadfilecontainer" (click)="fileInput.click()" appDragDrop
+                   (onFileDropped)="uploadFile($event)">
+                <input hidden type="file" value="imgUrl[0]"  accept="image/*" #fileInput (change)="uploadFile($event.target.files)">
+                <mat-error *ngIf="!checkphoto()">
+                  Выберите картинку!
+                </mat-error>
+              </div>
+              <div class="outlook" *ngIf="checkphoto()" (click)="removephoto()">
+                <img class="image" src="https://openweathermap.org/img/wn/02d@2x.png" *ngIf="!checkphoto()" />
+                <img class="image"  [src]="imgUrl[0]" *ngIf="checkphoto()" />
+              </div>
+            </mat-grid-tile>
+          </mat-grid-list>
+          <div class="example-container">
+            <mat-form-field>
+              <mat-label>Дата начала торгов</mat-label>
+              <input matInput type="datetime-local" autocomplete="off" formControlName="StartDate" [min]="mindate" placeholder="Выберите дату">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Дата конца торгов</mat-label>
+              <input matInput type="datetime-local" autocomplete="off" formControlName="EndDate" [min]="myToday" class="example-right-align" placeholder="Выберите дату">
+            </mat-form-field>
           </div>
-          <input placeholder="Введите цену" type="number" class="price" #price><label>RUB</label>
+            <div class="example-container">
+              <mat-form-field >
+                <mat-label>Type</mat-label>
+                <mat-select formControlName="Type">
+                  <mat-option *ngFor="let type of types;let i =index;"  [value]="i+1">
+                    {{type.lotType}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="slotValidation.get('Type').hasError('required')">
+                  Выберите тип
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="legacy">
+                <mat-label>Установите цену</mat-label>
+                <input type="number" formControlName="Cost" matInput placeholder="Placeholder" #price>
+                <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                <mat-hint>BUN</mat-hint>
+                <mat-error *ngIf="slotValidation.get('Cost').hasError('required')">
+                  Введите цену
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </form>
+            <!--<input class=" price" placeholder="Введите цену" type="number" #price><label>RUB</label>-->
         </mat-card-content>
         <mat-card-actions>
-          <button mat-button button class="btn btn-primary" (click)="addslot(price.value,text.value,seller.value)">
-            Add
+         <button mat-button button class="btn btn-primary" [disabled]="hasphoto || !slotValidation.valid" (click)="addslot(price.value,text.value,seller.value)">
+            Сохранить
           </button>
         </mat-card-actions>
       </mat-card>
