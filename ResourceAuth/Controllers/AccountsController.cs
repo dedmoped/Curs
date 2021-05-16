@@ -31,18 +31,23 @@ namespace ResourceAuth.Controllers
 
         [HttpPost]
         [Route("Account")]
-        public void UpdateAccount([FromForm]string accounts, [FromForm] IFormFile pic)
+        public void UpdateAccount([FromForm] IFormFile pic,[FromForm]string accounts)
         {
+            
             Accounts add = JsonConvert.DeserializeObject<Accounts>(accounts);
-            SaveImage saveImage = new SaveImage(pic);
-            var tast=saveImage.Run();
-            tast.Wait();
             var database = db.accounts.Where(x => x.Id == UserID).FirstOrDefault();
+            if (pic != null)
+            {
+                SaveImage saveImage = new SaveImage(pic);
+                var tast = saveImage.Run();
+                tast.Wait();
+                database.ImageUrl = saveImage.str;
+            }
             database.Email = add.Email;
             database.Description = add.Description;
             database.Password = add.Password;
             database.Name = add.Name;
-            database.ImageUrl = saveImage.str;
+            database.Mobile = add.Mobile;
             db.SaveChanges();
         } 
     }

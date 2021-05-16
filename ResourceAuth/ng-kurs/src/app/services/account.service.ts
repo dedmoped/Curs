@@ -11,11 +11,10 @@ export class AccountService {
   constructor(private http: HttpClient,
     @Inject(Auth_API_URL) private apiUrl: string) { }
   private baseApiUrl = `${this.apiUrl}api/`;
-  getAccount(): Observable<account>{
-      return this.http.get<account>(`${this.baseApiUrl}accounts/Account`)
+  getAccount(): Observable<any>{
+      return this.http.get<any>(`${this.baseApiUrl}accounts/Account`)
   }
   updateAccount(acc: account, file: File) {
-    acco :account;
     let formdata = new FormData();
     formdata.append("pic", file);
     formdata.append("accounts", JSON.stringify(acc));

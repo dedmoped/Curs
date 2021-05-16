@@ -91,6 +91,7 @@ namespace ResourceAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("getcurrentuserrate/{sellerid}")]
         public decimal getCurrentRating(int sellerid)
         {
