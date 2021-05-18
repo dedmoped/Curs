@@ -42,6 +42,7 @@ namespace ResourceAuth.Controllers
         public string Register([FromBody]Accounts acc)
         {
             try
+
             {
                 db.accounts.Add(new Accounts() { Email = acc.Email, Password = acc.Password, RoleId = 1,Mobile= acc.Mobile,Name=acc.Name});
                 db.SaveChanges();

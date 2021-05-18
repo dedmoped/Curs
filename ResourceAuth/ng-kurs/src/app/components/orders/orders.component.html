@@ -15,26 +15,41 @@
   </div>-->
 <!--</div>-->
 
-<div class="main-div" *ngFor="let ord of orders | filter:filterText">
-  <mat-card class="example-card">
-    <mat-card-header>
-      <div mat-card-avatar class="example-header-image"></div>
-      <mat-card-title>Продавец:{{ord.seller}}</mat-card-title>
-      <app-rating [sellerid]="ord.user_id" [readonl]="true"></app-rating>
-    </mat-card-header>
-    <app-count-down [dDay]="ord.startDate" [dDayEnd]="ord.endDate"> </app-count-down>
-    <a href="/slotinfo/{{ord.id}}">
-      <app-ngui>
-        <img mat-card-image class="imgcard" *ngIf src="{{ord.imageurl}}" (click)="slotinfo(post.id)" alt="Photo of a Shiba Inu" />
-      </app-ngui>
-    </a>
-    <mat-card-content>
-      <h5 class="card-title">{{ord.seller}}</h5>
+<div class="main-div">
+    <button class="btn btn-secondary" (click)="getCreatedLots()"> Созданные лоты </button>
+    <button class="btn btn-secondary" (click)="getByLots()"> Мои лоты </button>
+  </div>
+<div class="main-div" *ngFor="let ord of orders | filter:filterText;let i=index">
+  <mat-card>
+    <div class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Продавец:{{ord.seller}}</mat-card-title>
+        <app-rating [sellerid]="ord.user_id" [readonl]="true"></app-rating>
+      </mat-card-header>
+      <div *ngIf="!checkdate(ord.startDate)">
+        <span>До конца торгов осталось</span>
+        <app-count-down [dDay]="ord.startDate" [dDayEnd]="ord.endDate"> </app-count-down>
+      </div>
+      <div *ngIf="checkdate(ord.startDate)">
+        <span>До начала торгов осталось</span>
+        <app-count-down [dDay]="ord.startDate" [dDayEnd]="ord.endDate"> </app-count-down>
+      </div>
+      <a href="/slotinfo/{{ord.id}}">
+        <app-ngui>
+          <img mat-card-image class="imgcard" *ngIf src="{{ord.imageurl}}" (click)="slotinfo(post.id)" alt="Photo of a Shiba Inu" />
+        </app-ngui>
+      </a>
+    </div>
+    <mat-card-content style="left:0px;">
+      <p class="card-text" *ngIf="userPrice[i].ordprice!=null">Вы поставили <span style="color:#531313">{{userPrice[i].ordprice.userprice}}</span></p>
+      <p class="card-text" *ngIf="userPrice[i].user!=null">Наибольшую цену дал {{userPrice[i].user.email}}</p>
       <p class="card-text">{{ord.description}}</p>
       <p class="card-text">Текущая цена {{ord.cost}} RUB</p>
     </mat-card-content>
     <mat-card-actions>
-      <button class="btn-danger" (click)="RemoveOrder(ord)">Delete</button>
+      <button class="btn-danger" *ngIf="!userslot(ord.user_id)" (click)="RemoveOrder(ord)">Delete</button>
+      <button class="btn-danger" *ngIf="userslot(ord.user_id)" (click)="deleteslot(ord.id)">Delete</button>
     </mat-card-actions>
   </mat-card>
   </div>

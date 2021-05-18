@@ -45,7 +45,7 @@ export class RegisterComponent implements OnInit {
     if (this.registerForm.invalid) {
       return;
     }
-    this.au.register(this.registerForm.controls['email'].value, this.registerForm.controls['password'].value, this.registerForm.controls['phone'].value, this.registerForm.controls['name'].value).subscribe(res => alert(res), err => alert(err));
+    this.au.register(this.registerForm.controls['email'].value, this.registerForm.controls['password'].value, this.registerForm.controls['phone'].value, this.registerForm.controls['name'].value).subscribe(res => console.log(res), err => console.log(err));
     //this.login(this.registerForm.controls['email'].value, this.registerForm.controls['password'].value);
   }
 

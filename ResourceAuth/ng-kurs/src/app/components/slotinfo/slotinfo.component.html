@@ -22,9 +22,7 @@
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-button color="primary" (click)="takeslot(userprice.value)" *ngIf="isauth">Устновить цену</button>
+      <button mat-button color="primary" (click)="takeslot(userprice.value)" *ngIf="!userslot(slot.user_id)">Устновить цену</button>
     </mat-card-actions>
-
-
   </mat-card>
 </div>

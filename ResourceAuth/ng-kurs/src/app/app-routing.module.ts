@@ -28,7 +28,7 @@ const routes: Routes = [
   {path:'register',component:RegisterComponent},
   { path: 'slotinfo/:id', component: SlotinfoComponent },
   {path:'userpage',component:UserpageComponent},
-  { path: '**', component: ErroComponent },
+  //{ path: '**', component: ErroComponent },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

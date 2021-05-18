@@ -20,21 +20,27 @@ color: black;
     }
 }
 .footer-container {
-  margin-top: -36px;
+  margin-top: 0px;
+  text-align: center;
 }
-
+.footercolor{
+ background-color:rgb(43, 80, 95);
+}
 .footer-content {
   margin: 0 auto;
   text-align: center;
 }
 .content-outer-container{
-    min-height:100%;
-    margin:10px;
+    min-height:99%;
+    margin:0px;
 }
 .content-inner-container{
-    padding-bottom:36px;
+    padding-bottom:0px;
 }
 .example-card {
   max-width: 300px;
   float: left;
+}
+#clr{
+background-color: white;
 }

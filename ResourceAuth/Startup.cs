@@ -6,7 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ResourceAuth.Models;
+using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Hangfire;
+using ResourceAuth.Jobs;
+using System;
 
 namespace ResourceAuth
 {
@@ -25,7 +29,12 @@ namespace ResourceAuth
             var authOptions = Configuration.GetSection("Auth").Get<AuthOptions>();
             var authOptions1 = Configuration.GetSection("Auth");
             services.Configure<AuthOptions>(authOptions1);
-
+            services.AddHangfire(config =>
+            config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                 .UseSimpleAssemblyNameTypeSerializer()
+                 .UseDefaultTypeSerializer()
+                .UseMemoryStorage());
+            services.AddHangfireServer();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                  .AddJwtBearer(Opt =>
                  {
@@ -57,18 +66,26 @@ namespace ResourceAuth
                     });
 
             });
-            
+
             services.AddSingleton(new SlotsStore());
             string connectionString = "Server=tcp:cursov.database.windows.net,1433;Initial Catalog=authdatabase;Persist Security Info=False;User ID=dedmoped;Password=Passw0rd;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString));
+            services.AddSingleton<IRemoveOrders, RemoveOrderJob>();
+            services.AddSingleton<IEmailSender, SendEmail>();
+            services.AddSingleton<ILotsStatus, Jobs.LotStatus>();
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ng-kurs/dist";
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, 
+            IWebHostEnvironment env,
+            IBackgroundJobClient backgroundJobClient,
+            IServiceProvider serviceProvider,
+            IRecurringJobManager recurringJobManager)
         {
             if (env.IsDevelopment())
             {
@@ -88,7 +105,30 @@ namespace ResourceAuth
             {
                 endpoints.MapControllers();
             });
-
+            app.UseHangfireDashboard();
+            //recurringJobManager.AddOrUpdate(
+            //    "Run every minute",
+            //    () => serviceProvider.GetService<IRemoveOrders>().RemoveOrder(),
+            //    "* * * * *"
+            //    );
+            app.UseHangfireServer(new BackgroundJobServerOptions() {
+                Queues = new string[] { "inst1","inst2"}
+            });
+            recurringJobManager.AddOrUpdate(
+                "Run every minute",
+                () => serviceProvider.GetService<IRemoveOrders>().Print(),
+                "* * * * *"
+                );
+            recurringJobManager.AddOrUpdate(
+                "Run every",
+                () => serviceProvider.GetService<IEmailSender>().Send(),
+                "* * * * *"
+                );
+            recurringJobManager.AddOrUpdate(
+               "Run every minut",
+               () => serviceProvider.GetService<ILotsStatus>().ChangeLotStatus(),
+               "* * * * *",queue: "inst1"
+               );
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ng-kurs";

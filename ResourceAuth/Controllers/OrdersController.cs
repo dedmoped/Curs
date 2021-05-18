@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using ResourceAuth.Models;
 using Dropbox.Api.Files;
 using Newtonsoft.Json;
+using ResourceAuth.Help;
 
 namespace ResourceAuth.Controllers
 {
@@ -37,10 +38,48 @@ namespace ResourceAuth.Controllers
             if (!store.orders.Where(b => b.Userid == UserID).Select(g=>g.Userid).Contains(UserID)) return Ok(Enumerable.Empty<Lots>());
             var c = store.orders.Where(b=>b.Userid==UserID);
             var sel = c.Select(f => f.Slotid);
-            var orderedBooks = store.slots.Where(b => sel.Contains(b.Id));
-            var price = store.orders.Where(d => sel.Contains(d.Slotid) && d.Userid == UserID).FirstOrDefault().Userprice;
-            return Ok(new { orders = orderedBooks, userprice = price });
+            var orderedBooks = store.lots.Where(b => sel.Contains(b.Id)).ToList();
+            ///var user = store.orders.Where(d => sel.Contains(d.Slotid)).OrderByDescending(x=>x.Userprice).GroupBy(x => x.Slotid).ToList();
+            //var listprices = store.orders.Where(x => sel.Contains(x.Slotid)).ToList();
+            List<WhoTakeLot> whoTakeLots = new List<WhoTakeLot>();
+            var c1 = store.orders.Where(b => sel.Contains(b.Slotid));
+
+            foreach (var pr in orderedBooks)
+            {
+                var uord = store.orders.Where(x => x.Userid == UserID && x.Slotid==pr.Id).FirstOrDefault();
+                var ord=store.orders.Where(x => x.Slotid == pr.Id).OrderByDescending(x => x.Userprice).FirstOrDefault();
+                var user = store.accounts.Where(x => x.Id == ord.Userid).FirstOrDefault();
+                whoTakeLots.Add(new WhoTakeLot() { user = user, ordprice = uord });
+            }
+            
+            return Ok(new { orders = orderedBooks, userprice = whoTakeLots});
         }
+
+
+        [HttpGet]
+        [Authorize(Roles = "user")]
+        [Route("ord")]
+        public IActionResult GetuserlotsOrders()
+        {
+            if (!store.lots.Where(b => b.user_id == UserID).Select(g => g.user_id).Contains(UserID)) return Ok(Enumerable.Empty<Lots>());
+            var c = store.lots.Where(b => b.user_id == UserID);
+            var sel = c.Select(f => f.Id);
+            var orderedBooks = store.lots.Where(b => sel.Contains(b.Id)).ToList();
+            ///var user = store.orders.Where(d => sel.Contains(d.Slotid)).OrderByDescending(x=>x.Userprice).GroupBy(x => x.Slotid).ToList();
+            //var listprices = store.orders.Where(x => sel.Contains(x.Slotid)).ToList();
+            List<WhoTakeLot> whoTakeLots = new List<WhoTakeLot>();
+            var c1 = store.orders.Where(b => sel.Contains(b.Slotid));
+
+            foreach (var pr in orderedBooks)
+            {
+                var ord = store.orders.Where(x => x.Slotid == pr.Id && x.Userid==UserID).OrderByDescending(x => x.Userprice).FirstOrDefault();
+                var user = ord != null?store.accounts.Where(x => x.Id == ord.Userid).FirstOrDefault():null;
+                whoTakeLots.Add(new WhoTakeLot() { user = user, ordprice = ord });
+            }
+
+            return Ok(new { orders = orderedBooks, userprice = whoTakeLots });
+        }
+
 
         [HttpGet]
 
@@ -63,7 +102,7 @@ namespace ResourceAuth.Controllers
         [Route("add/{id}")]
         public void Add(int id)
         {
-            var c = store.slots.Where(b => b.Id == id).FirstOrDefault();
+            var c = store.lots.Where(b => b.Id == id).FirstOrDefault();
             store.orders.Add(new Orders() {Slotid=c.Id,Userid=UserID,Userprice=0});
             store.SaveChanges();
         }
@@ -110,7 +149,7 @@ namespace ResourceAuth.Controllers
             task.Wait();
             slots.Imageurl = str;
             slots.user_id = UserID;
-            store.slots.Add(slots);
+            store.lots.Add(slots);
             return str;
             
         }
@@ -118,7 +157,7 @@ namespace ResourceAuth.Controllers
         [Route("getslotbyid/{id}")]
         public IActionResult getSlotById(int id)
         {
-            var orderedBooks = store.slots.Where(b => b.Id==id);
+            var orderedBooks = store.lots.Where(b => b.Id==id);
             return Ok(orderedBooks);
         }
 
@@ -129,7 +168,7 @@ namespace ResourceAuth.Controllers
         {
 
             Lots info = JsonConvert.DeserializeObject<Lots>(slot);
-            var updatedata = store.slots.Where(b => b.Id == info.Id && b.user_id == UserID).FirstOrDefault();
+            var updatedata = store.lots.Where(b => b.Id == info.Id && b.user_id == UserID).FirstOrDefault();
             if (updatedata != null)
             {
                 file1 = pic;
@@ -137,11 +176,11 @@ namespace ResourceAuth.Controllers
                 {
                     var task = Task.Run((Func<Task>)OrdersController.Run);
                     task.Wait();
-                    store.slots.Where(b => b.Id == info.Id).FirstOrDefault().Imageurl = str;
+                    store.lots.Where(b => b.Id == info.Id).FirstOrDefault().Imageurl = str;
                 }
-                store.slots.Where(b => b.Id == info.Id && b.user_id == UserID).FirstOrDefault().Description = info.Description;
-                store.slots.Where(b => b.Id == info.Id).FirstOrDefault().Cost = info.Cost;
-                store.slots.Where(b => b.Id == info.Id).FirstOrDefault().Seller = info.Seller;
+                store.lots.Where(b => b.Id == info.Id && b.user_id == UserID).FirstOrDefault().Description = info.Description;
+                store.lots.Where(b => b.Id == info.Id).FirstOrDefault().Cost = info.Cost;
+                store.lots.Where(b => b.Id == info.Id).FirstOrDefault().Seller = info.Seller;
                 store.SaveChanges();
             }
         }

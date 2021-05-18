@@ -31,10 +31,18 @@ export class HomeComponent implements OnInit,AfterViewInit {
   is_Calback: boolean = false;
   myToday: any;
   today = new Date();
+  lotTypes:any;
+  innerWidth:any;
+  type: number=0;
+  status: number;
+  nowdate = new Date().toISOString().substring(0, 16);
+  sort:boolean=false;
   //ctrl= new FormControl(null,Validators.required);
   constructor(private bs: SlotstoreService, private router: ActivatedRoute ,  private ds: DataService, private http: HttpClient, private route: Router, private auth: AuthService,public dialog: MatDialog) { }
-   
+  
   ngOnInit(): void {
+    this.innerWidth=window.innerWidth;
+    this.getcategories();
     this.myToday = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), 0, this.today.getMinutes() + 60, 0);
     setInterval(() => { this.myToday -= 100, this.convertTodate() }, 1000);
     this.posts = this.router.snapshot.data.userposts;
@@ -42,6 +50,10 @@ export class HomeComponent implements OnInit,AfterViewInit {
     this.ds.currentMessage.subscribe(message => this.filterText = message);
     
   }
+  checkdate(db: string) {
+    return (Date.parse(db) - new Date().getTime())>0;
+  }
+
   convertTodate() {
     return this.today.toISOString().substring(0, 16);
   }
@@ -50,7 +62,7 @@ export class HomeComponent implements OnInit,AfterViewInit {
     this.page = this.page + 1;
     console.log(this.page);
     this.loadbar = true;
-    this.bs.getCatalog(this.page).subscribe((res) => this.onSuccess(res))   
+    this.bs.getCatalog(this.page,this.type,this.sort).subscribe((res) => this.onSuccess(res))   
   }
   loading: boolean = true
   onLoad() {
@@ -59,8 +71,23 @@ export class HomeComponent implements OnInit,AfterViewInit {
   ngAfterViewInit() {
  
   }
-
-
+foo(num:number){
+  this.page=1;
+  this.type = num;
+  this.loadbar = true;
+  this.posts = null;
+  this.bs.getCatalog(this.page, num, this.sort).subscribe((res) => { this.posts = res, this.loadbar=false});   
+  }
+  foo1(num: number) {
+    this.page = 1;
+    this.status = num;
+    this.loadbar = true;
+    this.posts = null;
+    this.bs.getCatalog(this.page, this.type, this.sort, num).subscribe((res) => { this.posts = res, this.loadbar = false });
+  }
+getcategories(){
+  this.bs.getTypes().subscribe(res=>{this.lotTypes=res,console.log(res)});
+}
   deleteslot(id: number) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent);
     dialogRef.afterClosed().subscribe(result => {
@@ -146,4 +173,11 @@ export class HomeComponent implements OnInit,AfterViewInit {
   bottomReached(): boolean {
     return (window.innerHeight + window.scrollY) >= document.body.offsetHeight;
   }
+
+@HostListener('window:resize',['$event'])
+onResize(event){
+this.innerWidth=window.innerWidth;
+console.log(this.innerWidth);
 }
+}
+

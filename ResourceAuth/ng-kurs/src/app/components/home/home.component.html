@@ -1,15 +1,31 @@
 
+<div *ngIf="innerWidth>1200">
+<div class="position-fixed" style="left:0;">
+  <ul class="list-group" *ngFor="let typ of lotTypes">
+  <li class="list-group-item" [ngClass]="{ 'active': type==typ.id}"(click)="foo(typ.id)">{{typ.lotType}}</li>
+</ul>
+</div>
+</div>
+<div class="position-fixed" style="right:0px;">
+  <button class="btn" [ngClass]="{ 'btn-primary': status==3}">Активные лоты</button>
+  <button class="btn" [ngClass]="{ 'btn-primary': status==2}">Предстоящие лоты</button>
+</div>
 <div class="main-div" *ngFor="let post of posts | filter:filterText">
   <mat-card class="example-card">
     <mat-card-header>
       <div mat-card-avatar class="example-header-image"></div>
       <mat-card-title>Продавец:{{post.seller}}</mat-card-title>
       <app-rating [sellerid]="post.user_id" [readonl]="true"></app-rating>
-      <app-count-down [dDay]="post.startDate" [dDayEnd]="post.endDate"> </app-count-down>
     </mat-card-header>
-    <app-ngui>
-      <img mat-card-image class="imgcard" *ngIf src="{{post.imageurl}}" (click)="slotinfo(post.id)" alt="Photo of a Shiba Inu" />
-    </app-ngui>
+    <div *ngIf="!checkdate(post.startDate)">
+      <span>До конца торгов осталось</span>
+      <app-count-down [dDay]="nowdate" [dDayEnd]="post.endDate"> </app-count-down>
+    </div>
+    <div *ngIf="checkdate(post.startDate)">
+      <span>До начала торгов осталось</span>
+      <app-count-down [dDay]="nowdate" [dDayEnd]="post.endDate"> </app-count-down>
+    </div>
+    <img  class="imgcard" src="{{post.imageurl}}" (click)="slotinfo(post.id)" alt="Photo of a Shiba Inu" />
     <mat-card-content>
       <p>Текущая цена: {{post.cost}}RUB</p>
       <p>

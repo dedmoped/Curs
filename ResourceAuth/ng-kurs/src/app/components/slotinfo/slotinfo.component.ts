@@ -8,6 +8,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Store_API_URL } from 'src/app/app-tokens';
 import {FormControl,Validators} from "@angular/forms"
 import { map } from 'jquery';
+export const ACCESS_ID = 'slotstore_access_id'
 @Component({
   selector: 'app-slotinfo',
   templateUrl: './slotinfo.component.html',
@@ -44,5 +45,18 @@ this.subscription=route.params.subscribe(params=>this.id=params['id']);
     var number = $.ajax({ async: false, url: `${this.apiUrl}api/slots/setrate/` + thisuser + "/" + this.slots[0].user_id + "/" + this.rate.value, type: 'POST' }).responseText;
     this.rate.setValue(Math.round(parseInt(number)))
     this.ratingnow = $.ajax({ async: false, url: `${this.apiUrl}api/slots/rate/` + this.slots[0].cost, type: 'GET' }).responseText;
+  }
+
+  userslot(id: string): boolean {
+    //  alert(id);
+    if (this.auth.isAuthenticated()) {
+      var userid = localStorage.getItem(ACCESS_ID);
+      console.log(userid);
+      console.log(id);
+      return id == userid
+    }
+    else {
+      return false;
+    }
   }
 }

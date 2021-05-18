@@ -25,17 +25,20 @@ private baseApiUrl=`${this.apiUrl}api/`;
     @Inject(Store_API_URL) 
     private apiUrl:string) { }
   lol: any;
-  getCatalog(numb: number): Observable<Slots[]>{
-    return this.http.get<Slots[]>(`${this.baseApiUrl}slots/lotList/` + numb).pipe(delay(1000));
+  getCatalog(numb: number, type: number = 0, asc: boolean = false, status: number = 1): Observable<Slots[]>{
+    return this.http.get<Slots[]>(`${this.baseApiUrl}slots/lotList/` + numb + '/' + type + '/' + asc + '/' + status).pipe(delay(1000));
   }
-
 byeslot(slotid:number,newprice:number){
   return this.http.post(`${this.baseApiUrl}slots/byeslot/` + slotid + "/" + newprice, {});
 }
 
 getOrders():Observable<Slots[]>
 {
-  return this.http.get<Slots[]>(`${this.baseApiUrl}orders`)
+  return this.http.get<Slots[]>(`${this.baseApiUrl}orders`);
+  }
+
+  getYourLots(): Observable<Slots[]> {
+    return this.http.get<Slots[]>(`${this.baseApiUrl}orders/ord`);
   }
   getUserPrice(userid: string, slotid: string) {
     return this.http.get(`${this.baseApiUrl}orders/uspri/` + userid + "/" + slotid)

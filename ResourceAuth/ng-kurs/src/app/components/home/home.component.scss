@@ -1,8 +1,8 @@
 .example-card {
-    max-width: 900px;
+    max-width: 700px;
     text-align:center;
     background-color:white;
-    margin:2px;
+    margin:4px;
   }
 
 .example-header-image {
@@ -17,10 +17,10 @@
   input{
     border: none;
   }
-  .imgcard{
-      width:500px;
-      padding:10px;
-  }
+.imgcard {
+  max-width: 300px;
+  padding: 10px;
+}
 app-ngui {
   min-height: 300px;
 }

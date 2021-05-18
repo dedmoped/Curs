@@ -13,7 +13,9 @@
   <ItemGroup>
     <PackageReference Include="Dropbox.Api" Version="5.5.0" />
     <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.22" />
     <PackageReference Include="Hangfire.Core" Version="1.7.22" />
+    <PackageReference Include="Hangfire.MemoryStorage" Version="1.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.10" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.10" />
@@ -30,7 +32,6 @@
 
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Jobs\" />
   </ItemGroup>
   
   <ItemGroup>

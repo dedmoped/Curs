@@ -33,16 +33,31 @@ namespace ResourceAuth.Controllers
                 store.lotTypes.Add(new LotType() { lotType = "Игры", Description = "Иформация о мобильных телефонах" });
                 store.lotTypes.Add(new LotType() { lotType = "Книги", Description = "Иформация о мобильных телефонах" });
                 store.lotTypes.Add(new LotType() { lotType = "Спорт", Description = "Иформация о мобильных телефонах" });
-                store.SaveChanges();
+               
             }
+            if (!store.roles.Any())
+            {
+                store.roles.Add(new Role() { RoleName = "user" });
+            }
+            if (!store.accounts.Any())
+            {
+                store.accounts.Add(new Accounts() { Email = "vilbicos2000@gmail.com", Password = "123456", RoleId = 1 });
+            }
+            store.SaveChanges();
         }
         [HttpGet]
-        [Route("lotList/{id}")]
-        public IEnumerable<Lots> GetAllSlots(int id)
+        [Route("lotList/{id}/{type}/{asc}/{status}")]
+        public IEnumerable<Lots> GetAllSlots(int id,int type,bool asc,int status)
         {
-            int skipedpages = id == 1 ? 0 : 5*id;
+            int skipedpages = id == 1 ? 0 : 5 * id;
             int takepages = id == 1 ? 10 : 5;
-            return store.slots.OrderBy(x=>x.Id).Skip(skipedpages).Take(takepages).ToList();
+            IQueryable<Lots>lots=store.lots.Where(x=>x.status_id == status);
+            if (type!=0)
+            {
+               lots= lots.Where(x => x.type_id == type);
+            }
+            lots = asc == false ? lots.OrderBy(x => x.Id).ThenByDescending(x=>x.EndDate): lots.OrderBy(x => x.Id).ThenBy(x=>x.EndDate);
+            return lots.Skip(skipedpages).Take(takepages).ToList();
         }
 
         [HttpGet]
@@ -68,7 +83,7 @@ namespace ResourceAuth.Controllers
             try
             {
                 store.orders.RemoveRange(store.orders.Where(b => b.Slotid == id));
-                store.slots.RemoveRange(store.slots.Where(b => b.Id == id));
+                store.lots.RemoveRange(store.lots.Where(b => b.Id == id));
                 store.SaveChanges();
                 return Ok();
             }
@@ -104,7 +119,7 @@ namespace ResourceAuth.Controllers
         public void ByeSlot(int slotid,int newprice)
         {
             store.orders.RemoveRange(store.orders.Where(d => d.Slotid==slotid && d.Userid == UserID));
-            store.slots.Where(sl => sl.Id == slotid).FirstOrDefault().Cost = newprice;
+            store.lots.Where(sl => sl.Id == slotid).FirstOrDefault().Cost = newprice;
             store.orders.Add(new Orders() { Slotid = slotid, Userid = UserID, Userprice = newprice });
             store.SaveChanges();
         }
@@ -129,8 +144,8 @@ namespace ResourceAuth.Controllers
             task.Wait();
            // store.orders.RemoveRange(store.orders.Where(d => d.Slotid == add.Id && d.Userid == UserID));
             string c = store.accounts.Where(b => b.Id == UserID).SingleOrDefault().Email;
-            Lots newSlot = new Lots() {Description=add.Description,Seller=c,Cost=add.Cost,user_id=UserID,EndDate=add.EndDate,StartDate=add.StartDate,status_id=add.status_id,Title=add.Title,type_id=add.type_id,Imageurl=str};
-            store.slots.Add(newSlot);
+            Lots newSlot = new Lots() {Description=add.Description,Seller=c,Cost=add.Cost,user_id=UserID,EndDate=add.EndDate,StartDate=add.StartDate,status_id=1,Title=add.Title,type_id=add.type_id,Imageurl=str};
+            store.lots.Add(newSlot);
             store.SaveChanges();
         }
 
