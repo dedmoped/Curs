@@ -48,7 +48,7 @@ namespace ResourceAuth.Controllers
                 {
                     return BadRequest(new { message = $"{acc.Email} уже занят" });
                 }
-                db.accounts.Add(new Accounts() { Email = acc.Email, Password = Crypto.HashPassword(acc.Password), RoleId = 2,Mobile= acc.Mobile,Name=acc.Name});
+                db.accounts.Add(new Accounts() { Email = acc.Email, Password = Crypto.HashPassword(acc.Password), RoleId = 1,Mobile= acc.Mobile,Name=acc.Name});
                 db.SaveChanges();
                 return Ok(new {message="Решисрация прошла успешно"});
             }
@@ -79,7 +79,7 @@ namespace ResourceAuth.Controllers
                 new Claim(JwtRegisteredClaimNames.Sub,user.Id.ToString())
             };
             
-                claims.Add(new Claim("role", user.RoleId == 6?"user":"admin"));
+                claims.Add(new Claim("role", user.RoleId == 1?"user":"admin"));
             
             var token = new JwtSecurityToken(authParams.Issuer,
                 authParams.Audience,

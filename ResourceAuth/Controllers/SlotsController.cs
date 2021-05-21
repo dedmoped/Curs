@@ -35,7 +35,7 @@ namespace ResourceAuth.Controllers
                 store.lotTypes.Add(new LotTypes() { LotType = "Спорт", Description = "Иформация о мобильных спорте" });
                
             }
-
+            store.SaveChanges();
         }
         [HttpGet]
         [Route("lotList/{id}/{type}/{asc}/{status}")]
@@ -105,6 +105,7 @@ namespace ResourceAuth.Controllers
             var rate = store.rating.Where(x => x.SellerId == sellerid && x.UserId == UserID);
             if (rate != null)
             {
+                if(rate.FirstOrDefault()!=null)
                 return rate.FirstOrDefault().Rate;
             }
             return 0;

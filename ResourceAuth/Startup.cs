@@ -119,16 +119,16 @@ namespace ResourceAuth
             ////    () => serviceProvider.GetService<IRemoveOrders>().Print(),
             ////    "* * * * *"
             ////    );
-            recurringJobManager.AddOrUpdate(
-                "Run every",
-                () => serviceProvider.GetService<IEmailSender>().Send(),
-                "*/2 * * * *"
-                );
-            recurringJobManager.AddOrUpdate(
-               "Run every minut",
-               () => serviceProvider.GetService<ILotsStatus>().ChangeLotStatus(),
-               "* * * * *", queue: "inst1"
-               );
+            //recurringJobManager.AddOrUpdate(
+            //    "Run every",
+            //    () => serviceProvider.GetService<IEmailSender>().Send(),
+            //    "*/2 * * * *"
+            //    );
+            //recurringJobManager.AddOrUpdate(
+            //   "Run every minut",
+            //   () => serviceProvider.GetService<ILotsStatus>().ChangeLotStatus(),
+            //   "* * * * *", queue: "inst1"
+            //   );
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ng-kurs";
