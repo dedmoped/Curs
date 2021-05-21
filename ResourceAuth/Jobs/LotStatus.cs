@@ -31,8 +31,6 @@ namespace ResourceAuth.Jobs
                         var createdlots = ctx.lots.Where(x => statuses.Contains(x.status_id));
                         foreach (var lot in createdlots)
                         {
-
-
                             if (lot.StartDate > DateTime.Now && lot.status_id != 2)
                             {
                                 lot.status_id = 2;
@@ -41,7 +39,7 @@ namespace ResourceAuth.Jobs
                             {
                                 lot.status_id = 1;
                             }
-                            else if (lot.EndDate < DateTime.Now && lot.status_id != 3)
+                            else if (lot.EndDate < DateTime.Now)
                                 lot.status_id = 3;
                         }
                         ctx.SaveChanges();

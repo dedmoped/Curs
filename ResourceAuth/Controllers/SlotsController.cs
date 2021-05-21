@@ -150,7 +150,7 @@ namespace ResourceAuth.Controllers
             task.Wait();
            // store.orders.RemoveRange(store.orders.Where(d => d.Slotid == add.Id && d.Userid == UserID));
             string c = store.accounts.Where(b => b.Id == UserID).SingleOrDefault().Email;
-            Lots newSlot = new Lots() {Description=add.Description,Seller=c,Cost=add.Cost,user_id=UserID,EndDate=add.EndDate,StartDate=add.StartDate,status_id=1,Title=add.Title,type_id=0,Imageurl=str};
+            Lots newSlot = new Lots() {Description=add.Description,Seller=c,Cost=add.Cost,user_id=UserID,EndDate=add.EndDate,StartDate=add.StartDate,status_id=0,Title=add.Title,type_id=add.type_id,Imageurl=str};
             store.lots.Add(newSlot);
             store.SaveChanges();
         }

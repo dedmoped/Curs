@@ -20,7 +20,7 @@
 
 .box {
   position: relative;
-  top: 0;
+  top: 20%;
   opacity: 1;
   float: left;
   padding: 60px 50px 40px 50px;
@@ -98,6 +98,5 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
-    margin-top: -50px;
+    margin-top: 50px;
   }

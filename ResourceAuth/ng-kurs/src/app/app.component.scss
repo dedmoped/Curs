@@ -30,9 +30,12 @@ color: black;
   margin: 0 auto;
   text-align: center;
 }
-.content-outer-container{
-    min-height:99%;
-    margin:0px;
+.content-outer-container {
+  background-image: url("../assets/3.jpg");
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  min-height: 100%;
+  margin: 0px;
 }
 .content-inner-container{
     padding-bottom:0px;
@@ -41,6 +44,4 @@ color: black;
   max-width: 300px;
   float: left;
 }
-#clr{
-background-color: white;
-}
+

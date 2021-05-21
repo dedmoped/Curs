@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit,AfterViewInit {
     this.getcategories();
     this.myToday = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), 0, this.today.getMinutes() + 60, 0);
     setInterval(() => { this.myToday -= 100, this.convertTodate() }, 1000);
-    console.log(this.router.snapshot.data.userposts);
+    this.posts=this.router.snapshot.data.userposts;
     //this.bs.getCatalog().subscribe(res => { this.posts = res });
     this.ds.currentMessage.subscribe(message => this.filterText = message);
     

@@ -1,3 +1,4 @@
+
 <div class="main-div" *ngFor="let slot of slots ">
   <mat-card class="example-card">
     <mat-card-header>
@@ -16,7 +17,7 @@
       <span>До начала торгов осталось</span>
       <app-count-down [dDay]="nowdate" [dDayEnd]="slot.startDate"> </app-count-down>
     </div>
-    <img mat-card-image class="imgcard" src="{{slot.imageurl}}" alt="Photo of a Shiba Inu">
+    <img mat-card-image class="imgcard app-ngui " src="{{slot.imageurl}}" alt="Photo of a Shiba Inu">
     <mat-card-content>
       <div class="container">
         <input type="hidden" value="{{slot.id}}" #id />
@@ -29,13 +30,9 @@
         </div>
         <br />
         <label> Текущая цена </label>
-        <div class="row">
           <input class="inpt" value="{{slot.cost}}" readonly name="цена" matInput #price>
-        </div>
         <label>Ваша цена</label>
-        <div class="row">
           <input matInput type="number" value="{{slot.cost}}" #userprice /><lable>BUN</lable>
-        </div>
       </div>
     </mat-card-content>
     <mat-card-actions>

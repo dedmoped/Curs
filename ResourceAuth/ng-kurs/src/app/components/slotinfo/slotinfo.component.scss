@@ -1,7 +1,7 @@
 .example-card {
   max-width: 900px;
   text-align: center;
-  background-color: white;
+  margin: 2px;
 }
 
 .example-header-image {
@@ -17,4 +17,8 @@
 .imgcard {
   width: 500px;
   padding: 10px;
+}
+
+app-ngui {
+  min-height: 300px;
 }
