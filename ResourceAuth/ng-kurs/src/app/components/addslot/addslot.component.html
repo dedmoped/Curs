@@ -75,8 +75,9 @@
             <!--<input class=" price" placeholder="Введите цену" type="number" #price><label>RUB</label>-->
         </mat-card-content>
         <mat-card-actions>
-         <button mat-button button class="btn btn-primary" [disabled]="hasphoto || !slotValidation.valid" (click)="addslot(price.value,text.value,seller.value)">
-            Сохранить
+          <button mat-button button class="btn btn-primary" [disabled]="hasphoto || !slotValidation.valid" (click)="addslot(price.value,text.value,seller.value)">
+            <span *ngIf="spinerlot" class="spinner-border spinner-border-sm"></span>
+              Сохранить
           </button>
         </mat-card-actions>
       </mat-card>

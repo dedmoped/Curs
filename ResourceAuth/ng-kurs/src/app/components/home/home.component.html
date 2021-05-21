@@ -1,31 +1,35 @@
 
-<div *ngIf="innerWidth>1200">
+<div *ngIf="innerWidth>920">
 <div class="position-fixed" style="left:0;">
   <ul class="list-group" *ngFor="let typ of lotTypes">
   <li class="list-group-item" [ngClass]="{ 'active': type==typ.id}"(click)="foo(typ.id)">{{typ.lotType}}</li>
 </ul>
 </div>
 </div>
-<div class="position-fixed" style="right:0px;">
-  <button class="btn" [ngClass]="{ 'btn-primary': status==3}">Активные лоты</button>
-  <button class="btn" [ngClass]="{ 'btn-primary': status==2}">Предстоящие лоты</button>
+<div *ngIf="innerWidth>895" class="position-fixed" style="right:0px;">
+  <ul class="list-group">
+    <li class="list-group-item" [ngClass]="{ 'active': status==1}" (click)="foo1(1)">Активные лоты</li>
+    <li class="list-group-item" [ngClass]="{ 'active': status==2}" (click)="foo1(2)">Предстоящие лоты</li>
+  </ul>
 </div>
 <div class="main-div" *ngFor="let post of posts | filter:filterText">
-  <mat-card class="example-card">
+  <mat-card class="example-card" *ngIf="checkdate(post.startDate)">
     <mat-card-header>
       <div mat-card-avatar class="example-header-image"></div>
       <mat-card-title>Продавец:{{post.seller}}</mat-card-title>
       <app-rating [sellerid]="post.user_id" [readonl]="true"></app-rating>
     </mat-card-header>
-    <div *ngIf="!checkdate(post.startDate)">
+    <div *ngIf="!chektime(post.startDate)">
       <span>До конца торгов осталось</span>
       <app-count-down [dDay]="nowdate" [dDayEnd]="post.endDate"> </app-count-down>
     </div>
-    <div *ngIf="checkdate(post.startDate)">
+    <div *ngIf="chektime(post.startDate)">
       <span>До начала торгов осталось</span>
-      <app-count-down [dDay]="nowdate" [dDayEnd]="post.endDate"> </app-count-down>
+      <app-count-down [dDay]="nowdate" [dDayEnd]="post.startDate"> </app-count-down>
     </div>
-    <img  class="imgcard" src="{{post.imageurl}}" (click)="slotinfo(post.id)" alt="Photo of a Shiba Inu" />
+    <app-ngui>
+      <img class="imgcard" *ngIf src="{{post.imageurl}}" (click)="slotinfo(post.id)" alt="Photo of a Shiba Inu" />
+    </app-ngui>
     <mat-card-content>
       <p>Текущая цена: {{post.cost}}RUB</p>
       <p>
@@ -38,5 +42,5 @@
       <button mat-button class="btn-warning" (click)="deleteslot(post.id)" *ngIf="userslot(post.user_id)">Delete</button>
     </mat-card-actions>
   </mat-card>
-</div>
+  </div>
 <mat-spinner style="margin:0 auto;" *ngIf="loadbar"></mat-spinner>

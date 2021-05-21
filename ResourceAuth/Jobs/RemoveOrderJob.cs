@@ -27,18 +27,18 @@ namespace ResourceAuth.Jobs
         }
         public void Print()
         {
-            Console.WriteLine($"Hanfire recurring job!");
-            using (IServiceScope scope = _serviceProvider.CreateScope())
-            using (var ctx = scope.ServiceProvider.GetRequiredService<ApplicationContext>())
-            {
+            //Console.WriteLine($"Hanfire recurring job!");
+            //using (IServiceScope scope = _serviceProvider.CreateScope())
+            //using (var ctx = scope.ServiceProvider.GetRequiredService<ApplicationContext>())
+            //{
               
-                var range = ctx.lots.Where(x => x.EndDate < DateTime.Now);
-                foreach(var c in range)
-                {
-                    c.status_id = 3;
-                }
-                ctx.SaveChanges();
-            }
+            //    var range = ctx.lots.Where(x => x.EndDate < DateTime.Now);
+            //    foreach(var c in range)
+            //    {
+            //        //c.status_id = 3;
+            //    }
+            //    ctx.SaveChanges();
+            //}
 
         }
     }

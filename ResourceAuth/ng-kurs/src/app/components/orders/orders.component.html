@@ -29,11 +29,11 @@
       </mat-card-header>
       <div *ngIf="!checkdate(ord.startDate)">
         <span>До конца торгов осталось</span>
-        <app-count-down [dDay]="ord.startDate" [dDayEnd]="ord.endDate"> </app-count-down>
+        <app-count-down [dDay]="nowdate" [dDayEnd]="ord.endDate"> </app-count-down>
       </div>
       <div *ngIf="checkdate(ord.startDate)">
         <span>До начала торгов осталось</span>
-        <app-count-down [dDay]="ord.startDate" [dDayEnd]="ord.endDate"> </app-count-down>
+        <app-count-down [dDay]="nowdate" [dDayEnd]="ord.startDate"> </app-count-down>
       </div>
       <a href="/slotinfo/{{ord.id}}">
         <app-ngui>

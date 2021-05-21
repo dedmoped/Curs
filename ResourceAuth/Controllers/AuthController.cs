@@ -6,6 +6,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using ResourceAuth.Help;
 using ResourceAuth.Models;
 
 namespace ResourceAuth.Controllers
@@ -39,25 +40,31 @@ namespace ResourceAuth.Controllers
 
         [Route("register")]
         [HttpPost]
-        public string Register([FromBody]Accounts acc)
+        public IActionResult Register([FromBody]Accounts acc)
         {
             try
-
             {
-                db.accounts.Add(new Accounts() { Email = acc.Email, Password = acc.Password, RoleId = 1,Mobile= acc.Mobile,Name=acc.Name});
+                if (db.accounts.Where(x => x.Email == acc.Email).ToList().Count > 0)
+                {
+                    return BadRequest(new { message = $"{acc.Email} уже занят" });
+                }
+                db.accounts.Add(new Accounts() { Email = acc.Email, Password = Crypto.HashPassword(acc.Password), RoleId = 2,Mobile= acc.Mobile,Name=acc.Name});
                 db.SaveChanges();
-                return "Решисрация прошла успешно";
+                return Ok(new {message="Решисрация прошла успешно"});
             }
             catch 
             {
-                return "Ощибка регистрации";
+                return BadRequest(new { message = "Ошибка регистрации" });
             }
         }
 
 
         private Accounts AuthenticatedUser(string email, string password)
         {
-            return db.accounts.SingleOrDefault(k => k.Email == email && k.Password == password);
+            Accounts accounts = db.accounts.SingleOrDefault(k => k.Email == email);
+            if (Crypto.VerifyHashedPassword(accounts.Password, password))
+                return accounts;
+            return null;
         }
 
         private string GenerateJWT(Accounts user)
@@ -72,7 +79,7 @@ namespace ResourceAuth.Controllers
                 new Claim(JwtRegisteredClaimNames.Sub,user.Id.ToString())
             };
             
-                claims.Add(new Claim("role", user.RoleId == 1?"user":"admin"));
+                claims.Add(new Claim("role", user.RoleId == 6?"user":"admin"));
             
             var token = new JwtSecurityToken(authParams.Issuer,
                 authParams.Audience,

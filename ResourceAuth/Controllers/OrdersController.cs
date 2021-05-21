@@ -157,31 +157,38 @@ namespace ResourceAuth.Controllers
         [Route("getslotbyid/{id}")]
         public IActionResult getSlotById(int id)
         {
-            var orderedBooks = store.lots.Where(b => b.Id==id);
+            var orderedBooks = store.lots.Where(b => b.Id==id && (b.status_id==2 || b.status_id==1));
             return Ok(orderedBooks);
         }
 
         [HttpPost]
         [Authorize(Roles = "user")]
         [Route("update")]
-        public void updateslot([FromForm] IFormFile pic, [FromForm] string slot)
+        public IActionResult updateslot([FromForm] IFormFile pic, [FromForm] string slot)
         {
-
-            Lots info = JsonConvert.DeserializeObject<Lots>(slot);
-            var updatedata = store.lots.Where(b => b.Id == info.Id && b.user_id == UserID).FirstOrDefault();
-            if (updatedata != null)
+            try
             {
-                file1 = pic;
-                if (file1 != null)
+                Lots info = JsonConvert.DeserializeObject<Lots>(slot);
+                var updatedata = store.lots.Where(b => b.Id == info.Id && b.user_id == UserID).FirstOrDefault();
+                if (updatedata != null)
                 {
-                    var task = Task.Run((Func<Task>)OrdersController.Run);
-                    task.Wait();
-                    store.lots.Where(b => b.Id == info.Id).FirstOrDefault().Imageurl = str;
+                    file1 = pic;
+                    if (file1 != null)
+                    {
+                        var task = Task.Run((Func<Task>)OrdersController.Run);
+                        task.Wait();
+                        store.lots.Where(b => b.Id == info.Id).FirstOrDefault().Imageurl = str;
+                    }
+                    store.lots.Where(b => b.Id == info.Id && b.user_id == UserID).FirstOrDefault().Description = info.Description;
+                    store.lots.Where(b => b.Id == info.Id).FirstOrDefault().Cost = info.Cost;
+                    store.lots.Where(b => b.Id == info.Id).FirstOrDefault().Seller = info.Seller;
+                    store.SaveChanges();
                 }
-                store.lots.Where(b => b.Id == info.Id && b.user_id == UserID).FirstOrDefault().Description = info.Description;
-                store.lots.Where(b => b.Id == info.Id).FirstOrDefault().Cost = info.Cost;
-                store.lots.Where(b => b.Id == info.Id).FirstOrDefault().Seller = info.Seller;
-                store.SaveChanges();
+                return Ok("Обновление прошло успешно");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Не удалось обновить лот");
             }
         }
 

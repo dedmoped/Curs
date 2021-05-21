@@ -19,7 +19,7 @@ export class AuthComponent implements OnInit {
   login(email:string,password:string){
     this.as.login(email,password).subscribe(res=>
       {
-
+console.log(res);
       },error=>{
         alert("Wrong login or password")
       })

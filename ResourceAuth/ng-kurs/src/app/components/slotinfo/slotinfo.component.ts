@@ -24,14 +24,17 @@ this.subscription=route.params.subscribe(params=>this.id=params['id']);
   firstslot: Slots[];
   id: number;
   isauth: boolean;
-  ratingnow:string;
+  ratingnow: string;
+  nowdate = new Date().toISOString().substring(0, 16);
   private subscription:Subscription;
   rate= new FormControl(null,Validators.required);
   ngOnInit(): void {
    this.bs.getOrderById(this.id).subscribe(res => { this.slots=res })
     this.isauth=this.auth.isAuthenticated();
   }
-
+  checkdate(db: string) {
+    return (Date.parse(db) - new Date().getTime()) > 0;
+  }
   takeslot(newprice: number) {
 
     console.log(this.slots);

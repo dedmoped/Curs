@@ -20,21 +20,28 @@ namespace ResourceAuth.Jobs
 
             try
             {
+
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 using (var ctx = scope.ServiceProvider.GetRequiredService<ApplicationContext>())
                 {
-                    using (var efscope = new TransactionScope(TransactionScopeOption.Required,
-                        new TransactionOptions { IsolationLevel = IsolationLevel.Serializable }))
+                    using (var efscope = new TransactionScope(TransactionScopeOption.RequiresNew,
+                        new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted}))
                     {
-                        List<int> statuses = new List<int>() { 0, 1, 2, };
+                        List<int> statuses = new List<int>() { 0, 1, 2 };
                         var createdlots = ctx.lots.Where(x => statuses.Contains(x.status_id));
                         foreach (var lot in createdlots)
                         {
-                            if (lot.StartDate > DateTime.Now)
+
+
+                            if (lot.StartDate > DateTime.Now && lot.status_id != 2)
+                            {
                                 lot.status_id = 2;
-                            else if (lot.StartDate < DateTime.Now)
+                            }
+                            else if (lot.StartDate < DateTime.Now && lot.status_id != 1)
+                            {
                                 lot.status_id = 1;
-                            else if (lot.EndDate < DateTime.Now)
+                            }
+                            else if (lot.EndDate < DateTime.Now && lot.status_id != 3)
                                 lot.status_id = 3;
                         }
                         ctx.SaveChanges();

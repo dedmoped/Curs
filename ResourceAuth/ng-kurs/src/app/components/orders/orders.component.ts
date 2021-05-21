@@ -18,6 +18,7 @@ export class OrdersComponent implements OnInit {
   orders: Slots[]
   filterText: string;
   userPrice: any;
+  nowdate = new Date().toISOString().substring(0, 16);
   userwithmaxprice: any
   constructor(private bs: SlotstoreService, private ds: DataService, public dialog: MatDialog, private auth: AuthService) { }
 

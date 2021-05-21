@@ -12,7 +12,8 @@
       <ngb-rating [(rate)]="currentRate" [starTemplate]="t" [readonly]="true" [max]="5" *ngIf="readonl"></ngb-rating>
     </div>
     <div class="col-lg text-right" *ngIf="!readonl">
-      <span>Your rate : {{userRating}}</span>
+      <span *ngIf="userRating==0" class="spinner-border spinner-border-sm"></span>
+      <span *ngIf="userRating!==0">Your rate: {{userRating}}</span>
     </div>
  </div>
   </div>

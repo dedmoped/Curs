@@ -46,7 +46,7 @@ import { UserpageComponent } from './components/userpage/userpage.component';
 import { RecentlylookComponent } from './components/recentlylook/recentlylook.component';
 import { FavoriteLotsComponent } from './components/favorite-lots/favorite-lots.component';
 import { CountDownComponent } from './components/count-down/count-down.component';
-
+import {ToastrModule} from 'ngx-toastr';
 export function tokenGetter(){
   return localStorage.getItem(ACCESS_TOKEN_KEY);
 }
@@ -104,6 +104,11 @@ export function tokenGetter(){
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
     SlimLoadingBarModule.forRoot(),
+    ToastrModule.forRoot({
+      timeOut:10000,
+      positionClass:'toast-bottom-right',
+      preventDuplicates:true
+    }),
     JwtModule.forRoot({
       config:{
         tokenGetter,

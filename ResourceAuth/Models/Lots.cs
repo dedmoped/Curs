@@ -22,7 +22,7 @@ namespace ResourceAuth.Models
         public int user_id { get; set; }
         public Accounts userid { get; set; }
         public int type_id { get; set; }
-        public LotType typeid { get; set; }
+        public LotTypes typeid { get; set; }
         public int status_id { get; set; }
         public LotStatus statusid { get; set; }
     }

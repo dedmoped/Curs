@@ -26,24 +26,16 @@ namespace ResourceAuth.Controllers
             this.store = store;
             if (!store.lotTypes.Any())
             {
-                store.lotTypes.Add(new LotType() { lotType = "Мобильные телефоны", Description = "Иформация о мобильных телефонах" });
-                store.lotTypes.Add(new LotType() { lotType = "Автомобили", Description = "Иформация об автомобилях телефонах" });
-                store.lotTypes.Add(new LotType() { lotType = "Ноутбуки", Description = "Иформация о мобильных телефонах" });
-                store.lotTypes.Add(new LotType() { lotType = "Детские товары", Description = "Иформация о мобильных телефонах" });
-                store.lotTypes.Add(new LotType() { lotType = "Игры", Description = "Иформация о мобильных телефонах" });
-                store.lotTypes.Add(new LotType() { lotType = "Книги", Description = "Иформация о мобильных телефонах" });
-                store.lotTypes.Add(new LotType() { lotType = "Спорт", Description = "Иформация о мобильных телефонах" });
+                store.lotTypes.Add(new LotTypes() { LotType = "Детские игрушки", Description = "Иформация об Детские игрушки" });
+                store.lotTypes.Add(new LotTypes() { LotType = "Исскусство", Description = "Иформация о Исскусстве" });
+                store.lotTypes.Add(new LotTypes() { LotType = "Книги", Description = "Иформация о Книгах" });
+                store.lotTypes.Add(new LotTypes() { LotType = "Компьютерные игры", Description = "Иформация о компьютерах" });
+                store.lotTypes.Add(new LotTypes() { LotType = "Монеты", Description = "Иформация о монетах" });
+                store.lotTypes.Add(new LotTypes() { LotType = "Мобильные телефоны", Description = "Иформация о мобильных телефонах" });
+                store.lotTypes.Add(new LotTypes() { LotType = "Спорт", Description = "Иформация о мобильных спорте" });
                
             }
-            if (!store.roles.Any())
-            {
-                store.roles.Add(new Role() { RoleName = "user" });
-            }
-            if (!store.accounts.Any())
-            {
-                store.accounts.Add(new Accounts() { Email = "vilbicos2000@gmail.com", Password = "123456", RoleId = 1 });
-            }
-            store.SaveChanges();
+
         }
         [HttpGet]
         [Route("lotList/{id}/{type}/{asc}/{status}")]
@@ -66,7 +58,7 @@ namespace ResourceAuth.Controllers
         {
             try
             {
-                return store.rating.Where(d => d.Sellerid == id).Average(x => x.Rate);
+                return store.rating.Where(d => d.SellerId == id).Average(x => x.Rate);
             }
             catch
             {
@@ -98,9 +90,9 @@ namespace ResourceAuth.Controllers
         [Route("setrate/{sellerid}/{currentrate}")]
         public decimal Getuserrate(int sellerid, int currentrate)
         {
-            store.rating.RemoveRange(store.rating.Where(d => d.Sellerid == sellerid && d.Userid==UserID));
+            store.rating.RemoveRange(store.rating.Where(d => d.SellerId == sellerid && d.UserId==UserID));
             store.SaveChanges();
-            store.rating.Add(new Rating() { Userid = UserID, Sellerid = sellerid, Rate = currentrate });
+            store.rating.Add(new Rating() { UserId = UserID, SellerId = sellerid, Rate = currentrate });
             store.SaveChanges();
             return currentrate;
         }
@@ -110,24 +102,37 @@ namespace ResourceAuth.Controllers
         [Route("getcurrentuserrate/{sellerid}")]
         public decimal getCurrentRating(int sellerid)
         {
-            return store.rating.Where(x => x.Sellerid == sellerid && x.Userid == UserID).FirstOrDefault().Rate;
+            var rate = store.rating.Where(x => x.SellerId == sellerid && x.UserId == UserID);
+            if (rate != null)
+            {
+                return rate.FirstOrDefault().Rate;
+            }
+            return 0;
         }
 
         [HttpPost]
         [Authorize(Roles = "user")]
         [Route("byeslot/{slotid}/{newprice}")]
-        public void ByeSlot(int slotid,int newprice)
+        public IActionResult ByeSlot(int slotid,int newprice)
         {
-            store.orders.RemoveRange(store.orders.Where(d => d.Slotid==slotid && d.Userid == UserID));
-            store.lots.Where(sl => sl.Id == slotid).FirstOrDefault().Cost = newprice;
-            store.orders.Add(new Orders() { Slotid = slotid, Userid = UserID, Userprice = newprice });
-            store.SaveChanges();
+            try
+            {
+                store.orders.RemoveRange(store.orders.Where(d => d.Slotid == slotid && d.Userid == UserID));
+                store.lots.Where(sl => sl.Id == slotid).FirstOrDefault().Cost = newprice;
+                store.orders.Add(new Orders() { Slotid = slotid, Userid = UserID, Userprice = newprice });
+                store.SaveChanges();
+                return Ok("Успешно");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Ошибка покупки");
+            }
         }
 
         [HttpGet]
         [Authorize]
         [Route("Type")]
-        public IEnumerable<LotType> LotType()
+        public IEnumerable<LotTypes> LotType()
         {
             return store.lotTypes.ToList();
         }
@@ -144,7 +149,7 @@ namespace ResourceAuth.Controllers
             task.Wait();
            // store.orders.RemoveRange(store.orders.Where(d => d.Slotid == add.Id && d.Userid == UserID));
             string c = store.accounts.Where(b => b.Id == UserID).SingleOrDefault().Email;
-            Lots newSlot = new Lots() {Description=add.Description,Seller=c,Cost=add.Cost,user_id=UserID,EndDate=add.EndDate,StartDate=add.StartDate,status_id=1,Title=add.Title,type_id=add.type_id,Imageurl=str};
+            Lots newSlot = new Lots() {Description=add.Description,Seller=c,Cost=add.Cost,user_id=UserID,EndDate=add.EndDate,StartDate=add.StartDate,status_id=1,Title=add.Title,type_id=0,Imageurl=str};
             store.lots.Add(newSlot);
             store.SaveChanges();
         }

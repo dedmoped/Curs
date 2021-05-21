@@ -34,7 +34,8 @@ export class HomeComponent implements OnInit,AfterViewInit {
   lotTypes:any;
   innerWidth:any;
   type: number=0;
-  status: number;
+  status: number = 1;
+  imgload: boolean = true;
   nowdate = new Date().toISOString().substring(0, 16);
   sort:boolean=false;
   //ctrl= new FormControl(null,Validators.required);
@@ -45,13 +46,23 @@ export class HomeComponent implements OnInit,AfterViewInit {
     this.getcategories();
     this.myToday = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), 0, this.today.getMinutes() + 60, 0);
     setInterval(() => { this.myToday -= 100, this.convertTodate() }, 1000);
-    this.posts = this.router.snapshot.data.userposts;
+    console.log(this.router.snapshot.data.userposts);
     //this.bs.getCatalog().subscribe(res => { this.posts = res });
     this.ds.currentMessage.subscribe(message => this.filterText = message);
     
   }
   checkdate(db: string) {
-    return (Date.parse(db) - new Date().getTime())>0;
+    var time = (Date.parse(db) - new Date().getTime()) > 0;
+    if (this.status == 1 && !time) {
+      return true;
+    }
+    if (this.status == 2 && time) {
+      return true;
+    }
+    return false;
+  }
+  chektime(db: string) {
+    return (Date.parse(db) - new Date().getTime()) > 0;
   }
 
   convertTodate() {
@@ -87,7 +98,10 @@ foo(num:number){
   }
 getcategories(){
   this.bs.getTypes().subscribe(res=>{this.lotTypes=res,console.log(res)});
-}
+  }
+  //load() {
+  //  this.imgload = false;
+  //}
   deleteslot(id: number) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent);
     dialogRef.afterClosed().subscribe(result => {

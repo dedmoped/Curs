@@ -5,6 +5,7 @@ import { Slots } from 'src/app/models/slot';
 import {SlotstoreService} from 'src/app/services/slotstore.service'
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import {FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 @Component({
   selector: 'app-addslot',
@@ -13,7 +14,7 @@ import {FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm, Validat
 })
 export class AddslotComponent implements OnInit {
 
-  constructor(private bs: SlotstoreService,private formBuilder: FormBuilder, private auth: AuthService, private router: Router) 
+  constructor(private bs: SlotstoreService, private toastr: ToastrService,private formBuilder: FormBuilder, private auth: AuthService, private router: Router) 
   { 
   }
   slots: Slots[]
@@ -24,6 +25,7 @@ export class AddslotComponent implements OnInit {
   files: any = [];
   imgUrl:any=[];
   file: any;
+  spinerlot: boolean = false;
   mindate = new Date().toISOString().substring(0, 16);
   today = new Date();
   myToday: any;
@@ -79,7 +81,8 @@ removephoto(){
       this.changes.startDate=this.slotValidation.controls['StartDate'].value;
       this.changes.type_id = this.slotValidation.controls['Type'].value;
       console.log(this.changes);
-      this.bs.addSlot(this.changes, this.files[0]).subscribe();
+      this.spinerlot = true;
+      this.bs.addSlot(this.changes, this.files[0]).subscribe(res => { this.spinerlot = false, this.toastr.success() }, err => { this.spinerlot = false, console.log(err) });
     }
     else {
       alert("Проверьте поля и картинку")

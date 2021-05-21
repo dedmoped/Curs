@@ -8,8 +8,8 @@ namespace ResourceAuth.Models
     public class Rating
     {
       public  int Id { get; set; }
-      public  int Sellerid { get; set; }
-      public int Userid { get; set; }
+      public  int SellerId { get; set; }
+      public int UserId { get; set; }
       public  int Rate { get; set; } 
     }
 }

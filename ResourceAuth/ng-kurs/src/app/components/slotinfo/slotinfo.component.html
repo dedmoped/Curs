@@ -4,25 +4,42 @@
       <div mat-card-avatar class="example-header-image"></div>
       <mat-card-title><p>{{slot.seller}}</p> </mat-card-title>
       <!--<div>
-        <ngb-rating [max]="5" [formControl]="rate" (click)="changerate()" *ngIf="isauth"></ngb-rating>
-      </div>-->
+      <ngb-rating [max]="5" [formControl]="rate" (click)="changerate()" *ngIf="isauth"></ngb-rating>
+    </div>-->
       <app-rating [sellerid]="slot.user_id" [readonl]="false" *ngIf="isauth"></app-rating>
     </mat-card-header>
-    <img mat-card-image src="{{slot.imageurl}}" width="200px" alt="Photo of a Shiba Inu">
+    <div *ngIf="!checkdate(slot.startDate)">
+      <span>До конца торгов осталось</span>
+      <app-count-down [dDay]="nowdate" [dDayEnd]="slot.endDate"> </app-count-down>
+    </div>
+    <div *ngIf="checkdate(slot.startDate)">
+      <span>До начала торгов осталось</span>
+      <app-count-down [dDay]="nowdate" [dDayEnd]="slot.startDate"> </app-count-down>
+    </div>
+    <img mat-card-image class="imgcard" src="{{slot.imageurl}}" alt="Photo of a Shiba Inu">
     <mat-card-content>
-      <div>
+      <div class="container">
         <input type="hidden" value="{{slot.id}}" #id />
-        <label> Описание </label>
-        <input class="inpt" value="{{slot.description}}" readonly name="description" matInput #description>
-        <label> Цена </label>
-        <input class="inpt" value="{{slot.cost}}" readonly name="цена" matInput #price>
+        <div> Лот №{{slot.id}}</div>
+        <div class="row">
+          <label> Описание </label>
+        </div>
+        <div class="row">
+          <div>{{slot.description}}</div>
+        </div>
         <br />
-        <label>Ваша цена за лот </label>
-        <input matInput type="number" value="{{slot.cost}}" #userprice /><lable>RUB</lable>
+        <label> Текущая цена </label>
+        <div class="row">
+          <input class="inpt" value="{{slot.cost}}" readonly name="цена" matInput #price>
+        </div>
+        <label>Ваша цена</label>
+        <div class="row">
+          <input matInput type="number" value="{{slot.cost}}" #userprice /><lable>BUN</lable>
+        </div>
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-button color="primary" (click)="takeslot(userprice.value)" *ngIf="!userslot(slot.user_id)">Устновить цену</button>
+      <button mat-button color="primary" (click)="takeslot(userprice.value)" *ngIf="!userslot(slot.user_id) && slot.status_id==1">Устновить цену</button>
     </mat-card-actions>
   </mat-card>
 </div>

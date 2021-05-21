@@ -10,21 +10,23 @@ import { FormControl, Validators } from '@angular/forms';
 export class RatingComponent implements OnInit {
 
   @Input() sellerid: any;
+  spinerrating: boolean = true;
   currentRate: any;
-  userRating: any;
+  userRating: any=0;
   current: any;
   @Input() readonl: boolean;
   constructor(private ds:SlotstoreService ) { }
   ngOnInit(): void {
     console.log("ngOnInit")
-    this.ds.getSlotRating(this.sellerid).subscribe(res => { this.currentRate = res, this.current = res }, err => alert("error rating"));
-    this.ds.getCurrentUserRating(this.sellerid).subscribe(res => { this.userRating = res }, err => alert("error"));
+    this.ds.getSlotRating(this.sellerid).subscribe(res => { this.currentRate = res, this.spinerrating = false }, err => { alert("error rating"), this.spinerrating = false });
+    this.ds.getCurrentUserRating(this.sellerid).subscribe(res => { this.userRating = res, this.spinerrating = false }, err => { alert("error rating"), this.spinerrating = false });
   }
   changerate() {
+    this.userRating = 0;
     this.ds.setRate(this.sellerid, this.currentRate).toPromise().then(
        (data)=> {
         this.userRating = data;
-        this.ds.getSlotRating(this.sellerid).toPromise().then((info) => { this.currentRate = info; this.current = info });
+        this.ds.getSlotRating(this.sellerid).toPromise().then((info) => { this.spinerrating = false; this.currentRate = info;});
           });
   }
 
