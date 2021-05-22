@@ -72,7 +72,7 @@ namespace ResourceAuth.Controllers
 
             foreach (var pr in orderedBooks)
             {
-                var ord = store.orders.Where(x => x.Slotid == pr.Id && x.Userid==UserID).OrderByDescending(x => x.Userprice).FirstOrDefault();
+                var ord = store.orders.Where(x => x.Slotid == pr.Id).OrderByDescending(x => x.Userprice).FirstOrDefault();
                 var user = ord != null?store.accounts.Where(x => x.Id == ord.Userid).FirstOrDefault():null;
                 whoTakeLots.Add(new WhoTakeLot() { user = user, ordprice = ord });
             }
@@ -136,6 +136,11 @@ namespace ResourceAuth.Controllers
         public void DeleteOrder(int id)
         {
             store.orders.RemoveRange(store.orders.Where(d => d.Slotid == id && d.Userid == UserID));
+            store.SaveChanges();
+            if (store.orders.Any(x => x.Slotid == id))
+            {
+                store.lots.Where(x => x.Id == id).FirstOrDefault().Cost = store.orders.Where(x => x.Slotid == id).OrderByDescending(x => x.Userprice).FirstOrDefault().Userprice;
+            }
             store.SaveChanges();
         }
         [HttpPost]

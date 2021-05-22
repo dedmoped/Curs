@@ -31,12 +31,12 @@ export class AddslotComponent implements OnInit {
   myToday: any;
   slotValidation: FormGroup;
   ngOnInit(): void {
-    this.myToday = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), 0, this.today.getMinutes()+60, 0).toISOString().substring(0, 16);
+    this.myToday = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), 0, this.today.getMinutes()+30, 0).toISOString().substring(0, 16);
     if (!this.auth.isAuthenticated()) {
       this.router.navigate(["auth"])
     }
     this.slotValidation = this.formBuilder.group({
-      Title: ['', [Validators.required, Validators.maxLength(20)]],
+      Title: ['', [Validators.required, Validators.maxLength(30)]],
       Cost:['',[Validators.required]],
       Type: ['', Validators.required],
       StartDate: [this.mindate, Validators.required],
@@ -82,7 +82,7 @@ removephoto(){
       this.changes.type_id = this.slotValidation.controls['Type'].value;
       console.log(this.changes);
       this.spinerlot = true;
-      this.bs.addSlot(this.changes, this.files[0]).subscribe(res => { this.spinerlot = false, this.toastr.success() }, err => { this.spinerlot = false, console.log(err) });
+      this.bs.addSlot(this.changes, this.files[0]).subscribe(res => { this.spinerlot = false, this.toastr.info("Вашлот появится через минуту") }, err => { this.spinerlot = false, console.log(err) });
     }
     else {
       alert("Проверьте поля и картинку")

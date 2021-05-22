@@ -17,26 +17,28 @@
       <span>До начала торгов осталось</span>
       <app-count-down [dDay]="nowdate" [dDayEnd]="slot.startDate"> </app-count-down>
     </div>
-    <img mat-card-image class="imgcard app-ngui " src="{{slot.imageurl}}" alt="Photo of a Shiba Inu">
-    <mat-card-content>
-      <div class="container">
-        <input type="hidden" value="{{slot.id}}" #id />
-        <div> Лот №{{slot.id}}</div>
-        <div class="row">
-          <label> Описание </label>
-        </div>
-        <div class="row">
-          <div>{{slot.description}}</div>
-        </div>
-        <br />
-        <label> Текущая цена </label>
+      <img mat-card-image class="imgcard app-ngui " src="{{slot.imageurl}}" alt="Photo of a Shiba Inu">
+      <mat-card-content>
+        <div class="container">
+          <input type="hidden" value="{{slot.id}}" #id />
+          <div> Лот №{{slot.id}}</div>
+          <div class="row">
+            <label> Описание </label>
+          </div>
+          <div style="width:500px;">
+            <p>
+              {{slot.description}}
+            </p>
+          </div>
+          <br />
+          <label> Текущая цена </label>
           <input class="inpt" value="{{slot.cost}}" readonly name="цена" matInput #price>
-        <label>Ваша цена</label>
+          <label>Ваша цена</label>
           <input matInput type="number" value="{{slot.cost}}" #userprice /><lable>BUN</lable>
-      </div>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-button color="primary" (click)="takeslot(userprice.value)" *ngIf="!userslot(slot.user_id) && slot.status_id==1">Устновить цену</button>
-    </mat-card-actions>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary" (click)="takeslot(userprice.value)" *ngIf="!userslot(slot.user_id) && slot.status_id==1">Устновить цену</button>
+      </mat-card-actions>
   </mat-card>
 </div>

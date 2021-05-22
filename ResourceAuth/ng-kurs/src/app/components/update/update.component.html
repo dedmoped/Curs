@@ -5,8 +5,8 @@
           <div mat-card-avatar class="example-header-image"></div>
           <mat-card-title><input value="{{slot.seller}}" name="seller" readonly matInput #seller> </mat-card-title>
         </mat-card-header>
-        <img mat-card-image src="{{slot.imageurl}}" width="200px" alt="Photo of a Shiba Inu">
-        <div class="uploadfilecontainer" (click)="fileInput.click()" appDragDrop
+        <img mat-card-image *ngIf="!imgUrl[0]" src="{{slot.imageurl}}" width="200px" alt="Photo of a Shiba Inu">
+        <div *ngIf="!imgUrl[0]" class="uploadfilecontainer" (click)="fileInput.click()" appDragDrop
  (onFileDropped)="uploadFile($event)">
     <input hidden type="file" accept="image/*" #fileInput (change)="uploadFile($event.target.files)">
   </div>
@@ -17,8 +17,11 @@
             <br />
             <input type="hidden" value="{{slot.id}}" #id />
             <label>Описание</label>
-            <input value="{{slot.description}}" name="description" matInput #description>
+            <br />
+            <textarea cols="40" rows="5"  name="description" matInput #description>{{slot.description}}</textarea>
+            <br/>
             <label>Цена</label>
+            <br/>
             <input value="{{slot.cost}}" name="цена" matInput #price>
           </p>
 

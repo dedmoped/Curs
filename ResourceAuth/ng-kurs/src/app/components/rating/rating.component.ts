@@ -18,8 +18,8 @@ export class RatingComponent implements OnInit {
   constructor(private ds:SlotstoreService ) { }
   ngOnInit(): void {
     console.log("ngOnInit")
-    this.ds.getSlotRating(this.sellerid).subscribe(res => { this.currentRate = res, this.spinerrating = false }, err => { alert("error rating"), this.spinerrating = false });
-    this.ds.getCurrentUserRating(this.sellerid).subscribe(res => { this.userRating = res, this.spinerrating = false }, err => { alert("error rating"), this.spinerrating = false });
+    this.ds.getSlotRating(this.sellerid).subscribe(res => { this.currentRate = res, this.spinerrating = false }, err => { this.spinerrating = false });
+    this.ds.getCurrentUserRating(this.sellerid).subscribe(res => { this.userRating = res, this.spinerrating = false }, err => {this.spinerrating = false });
   }
   changerate() {
     this.userRating = 0;

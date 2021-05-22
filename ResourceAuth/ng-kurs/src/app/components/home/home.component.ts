@@ -87,7 +87,7 @@ foo(num:number){
   this.type = num;
   this.loadbar = true;
   this.posts = null;
-  this.bs.getCatalog(this.page, num, this.sort).subscribe((res) => { this.posts = res, this.loadbar=false});   
+  this.bs.getCatalog(this.page, this.type, this.sort, this.status).subscribe((res) => { this.posts = res, this.loadbar = false });   
   }
   foo1(num: number) {
     this.page = 1;

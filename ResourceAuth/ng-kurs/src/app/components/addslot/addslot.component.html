@@ -15,13 +15,14 @@
             </mat-form-field>
           </p>
           <mat-grid-list cols="4" rowHeight="100px">
-            <p>Описание</p>
+            
             <mat-grid-tile 
             [colspan]="3"
             [rowspan]="2"> 
-            <div class="form-group green-border-focus">
-              <textarea class="form-control" id="exampleFormControlTextarea5"  rows="5" cols="50" #text></textarea>
-            </div>
+              <div class="form-group green-border-focus">
+                <div class="row">Описание</div>
+                <textarea class="form-control" id="exampleFormControlTextarea5" rows="5" cols="50" #text></textarea>
+              </div>
           </mat-grid-tile>
             <mat-grid-tile 
             [colspan]="1"
@@ -53,7 +54,7 @@
               <mat-form-field >
                 <mat-label>Type</mat-label>
                 <mat-select formControlName="Type">
-                  <mat-option *ngFor="let type of types;let i =index;"  [value]="i+1">
+                  <mat-option *ngFor="let type of types;let i =index;"  [value]="type.id">
                     {{type.lotType}}
                   </mat-option>
                 </mat-select>

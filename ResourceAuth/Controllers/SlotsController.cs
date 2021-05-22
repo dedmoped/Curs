@@ -131,7 +131,6 @@ namespace ResourceAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         [Route("Type")]
         public IEnumerable<LotTypes> LotType()
         {

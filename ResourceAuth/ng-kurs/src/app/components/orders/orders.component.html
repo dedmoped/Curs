@@ -16,9 +16,9 @@
 <!--</div>-->
 
 <div class="main-div">
-    <button class="btn btn-secondary" (click)="getCreatedLots()"> Созданные лоты </button>
-    <button class="btn btn-secondary" (click)="getByLots()"> Мои лоты </button>
-  </div>
+  <button class="btn btn-secondary" style="margin:2px" (click)="getByLots()"> Мои лоты </button>
+  <button class="btn btn-secondary" style="margin:2px" (click)="getCreatedLots()"> Созданные лоты </button>
+</div>
 <div class="main-div" *ngFor="let ord of orders | filter:filterText;let i=index">
   <mat-card>
     <div class="example-card">
@@ -42,9 +42,13 @@
       </a>
     </div>
     <mat-card-content style="left:0px;">
-      <p class="card-text" *ngIf="userPrice[i].ordprice!=null">Вы поставили <span style="color:#531313">{{userPrice[i].ordprice.userprice}}</span></p>
+      <p class="card-text" *ngIf="userPrice[i].ordprice!=null && !userslot(ord.user_id)">Вы поставили <span style="color:#531313">{{userPrice[i].ordprice.userprice}}</span></p>
       <p class="card-text" *ngIf="userPrice[i].user!=null">Наибольшую цену дал {{userPrice[i].user.email}}</p>
-      <p class="card-text">{{ord.description}}</p>
+      <div style="width:500px;">
+        <p>
+          {{ord.description}}
+        </p>
+      </div>
       <p class="card-text">Текущая цена {{ord.cost}} RUB</p>
     </mat-card-content>
     <mat-card-actions>

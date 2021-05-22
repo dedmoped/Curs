@@ -15,8 +15,9 @@
 }
 
 .imgcard {
-  width: 500px;
+  max-width: 250px;
   padding: 10px;
+  background-size: cover;
 }
 
 app-ngui {
