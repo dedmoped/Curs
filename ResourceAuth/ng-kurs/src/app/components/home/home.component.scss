@@ -18,10 +18,20 @@
   }
 .imgcard {
   max-width: 300px;
-  padding: 10px;
-   background-size: cover;
+  background-size: cover;
+  position:center;
 }
-app-ngui {
-  min-height: 300px;
+.owl-carousel {
+  width: 10% !important;
+  margin: 10% auto;
 }
+.wrapper-circle {
+  width: 100px;
+  height: 100px;
+}
+
+
+
+
+
 

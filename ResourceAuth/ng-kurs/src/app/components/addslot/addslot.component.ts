@@ -47,17 +47,28 @@ export class AddslotComponent implements OnInit {
   checkphoto():boolean{
    return this.files.length
   }
+
+  carouselOptions = {
+    margin: 25,
+    nav: true,
+    center: true,
+    navText: ["<div class='nav-btn prev-slide'></div>", "<div class='nav-btn next-slide'></div>"],
+    responsiveClass: true,
+    items: 1
+  }
   
   uploadFile(event) {
+    this.files = [];
+    this.imgUrl = [];
     for (let index = 0; index < event.length; index++) {
       const element = event[index];
-      this.files[0]=element
+      this.files[index] = element
       var reader= new FileReader();
+      reader.onload = (_event) => {
+        this.imgUrl[index] = _event.target.result;
+      }
       reader.readAsDataURL(element);
-      reader.onload=(_event)=>{
-      this.imgUrl[0]=reader.result;
-     }
-     this.hasphoto=false;
+      this.hasphoto = false;
   }
 }
 foods = [
@@ -82,7 +93,7 @@ removephoto(){
       this.changes.type_id = this.slotValidation.controls['Type'].value;
       console.log(this.changes);
       this.spinerlot = true;
-      this.bs.addSlot(this.changes, this.files[0]).subscribe(res => { this.spinerlot = false, this.toastr.info("Вашлот появится через минуту") }, err => { this.spinerlot = false, console.log(err) });
+      this.bs.addSlot(this.changes, this.files).subscribe(res => { this.spinerlot = false, this.toastr.info("Вашлот появится через минуту") }, err => { this.spinerlot = false, console.log(err) });
     }
     else {
       alert("Проверьте поля и картинку")

@@ -37,16 +37,30 @@ export class HomeComponent implements OnInit,AfterViewInit {
   status: number = 1;
   imgload: boolean = true;
   nowdate = new Date().toISOString().substring(0, 16);
-  sort:boolean=false;
+  sort: boolean = false;
   //ctrl= new FormControl(null,Validators.required);
   constructor(private bs: SlotstoreService, private router: ActivatedRoute ,  private ds: DataService, private http: HttpClient, private route: Router, private auth: AuthService,public dialog: MatDialog) { }
-  
+
+
+
+  carouselOptions = {
+    margin: 25,
+    nav: true,
+    center: true,
+    navText: ["<div class='nav-btn prev-slide'></div>", "<div class='nav-btn next-slide'></div>"],
+    responsiveClass: true,
+    items: 1
+  }
+
+
   ngOnInit(): void {
     this.innerWidth=window.innerWidth;
     this.getcategories();
     this.myToday = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), 0, this.today.getMinutes() + 60, 0);
     setInterval(() => { this.myToday -= 100, this.convertTodate() }, 1000);
-    this.posts=this.router.snapshot.data.userposts;
+    this.posts = this.router.snapshot.data.userposts;
+    console.log(this.posts);
+    //this.images = [ this.posts[0].imageurl, this.posts[0].imageurl, this.posts[0].imageurl, this.posts[0].imageurl, this.posts[0].imageurl]
     //this.bs.getCatalog().subscribe(res => { this.posts = res });
     this.ds.currentMessage.subscribe(message => this.filterText = message);
     

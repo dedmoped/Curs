@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using ResourceAuth.Help;
 using ResourceAuth.Models;
 
 namespace ResourceAuth.Controllers
@@ -19,8 +20,8 @@ namespace ResourceAuth.Controllers
     {
         private readonly ApplicationContext store;
         private int UserID => Int32.Parse(User.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value);
-        static IFormFile file;
-        static string str;
+        static List<IFormFile> files;
+        static List<string> str = new List<string>() { };
         public SlotsController(ApplicationContext store)
         {
             this.store = store;
@@ -39,7 +40,7 @@ namespace ResourceAuth.Controllers
         }
         [HttpGet]
         [Route("lotList/{id}/{type}/{asc}/{status}")]
-        public IEnumerable<Lots> GetAllSlots(int id,int type,bool asc,int status)
+        public IEnumerable<Lot> GetAllSlots(int id,int type,bool asc,int status)
         {
             int skipedpages = id == 1 ? 0 : 5 * id;
             int takepages = id == 1 ? 10 : 5;
@@ -49,7 +50,7 @@ namespace ResourceAuth.Controllers
                lots= lots.Where(x => x.type_id == type);
             }
             lots = asc == false ? lots.OrderBy(x => x.Id).ThenByDescending(x=>x.EndDate): lots.OrderBy(x => x.Id).ThenBy(x=>x.EndDate);
-            return lots.Skip(skipedpages).Take(takepages).ToList();
+            return lots.Skip(skipedpages).Take(takepages).Select(Lot.Create).ToList();
         }
 
         [HttpGet]
@@ -140,16 +141,15 @@ namespace ResourceAuth.Controllers
         [HttpPost]
         [Authorize(Roles = "user")]
         [Route("addslot")]
-        public void AddUserSlot([FromForm]IFormFile pic,[FromForm]string slotinfo)
+        public void AddUserSlot([FromForm]List<IFormFile> pic,[FromForm]Lots slotinfo)
         {
             
-            file = pic;
-            Lots add = JsonConvert.DeserializeObject<Lots>(slotinfo);
+            files = pic;
             var task = Task.Run((Func<Task>)SlotsController.Run);
             task.Wait();
            // store.orders.RemoveRange(store.orders.Where(d => d.Slotid == add.Id && d.Userid == UserID));
             string c = store.accounts.Where(b => b.Id == UserID).SingleOrDefault().Email;
-            Lots newSlot = new Lots() {Description=add.Description,Seller=c,Cost=add.Cost,user_id=UserID,EndDate=add.EndDate,StartDate=add.StartDate,status_id=0,Title=add.Title,type_id=add.type_id,Imageurl=str};
+            Lots newSlot = new Lots() {Description= slotinfo.Description,Seller=c,Cost= slotinfo.Cost,user_id=UserID,EndDate= slotinfo.EndDate,StartDate= slotinfo.StartDate,status_id=0,Title= slotinfo.Title,type_id= slotinfo.type_id,Imageurl=JsonConvert.SerializeObject(str)};
             store.lots.Add(newSlot);
             store.SaveChanges();
         }
@@ -158,27 +158,31 @@ namespace ResourceAuth.Controllers
         {
             using (var dbx = new DropboxClient("rPWXczyuKPcAAAAAAAAAATZo9acve3FbYnA1Fwol8Flroqb8HBX9iBapvJGePNud"))
             {
-                //string file = "appsettings.json";
-                string url = "";
-                string folder = "/UploadPhoto";
-                using (var memory = file.OpenReadStream())
+                foreach (var file in files)
                 {
-                    var upload = dbx.Files.UploadAsync(folder + "/" + file.FileName, WriteMode.Overwrite.Instance, body: memory);
-                    upload.Wait();
-                    try
+                    //string file = "appsettings.json";
+                    string url = "";
+                    string folder = "/UploadPhoto";
+                    using (var memory = file.OpenReadStream())
                     {
+                        var upload = dbx.Files.UploadAsync(folder + "/" + file.FileName, WriteMode.Overwrite.Instance, body: memory);
+                        upload.Wait();
+                        try
+                        {
 
-                        var tx = dbx.Sharing.CreateSharedLinkWithSettingsAsync(folder + "/" + file.FileName);
-                        tx.Wait();
-                        url = tx.Result.Url;
+                            var tx = dbx.Sharing.CreateSharedLinkWithSettingsAsync(folder + "/" + file.FileName);
+                            tx.Wait();
+                            url = tx.Result.Url;
 
+                        }
+                        catch
+                        {
+                            var c = dbx.Sharing.ListSharedLinksAsync(folder + "/" + file.FileName);
+                            c.Wait();
+                            url = c.Result.Links[0].Url;
+                        }
+                        str.Add(url.Remove(url.Length - 1) + '1');
                     }
-                    catch {
-                        var c = dbx.Sharing.ListSharedLinksAsync(folder + "/" + file.FileName);
-                        c.Wait();
-                        url = c.Result.Links[0].Url;
-                    }
-                    str = url.Remove(url.Length - 1) + '1';
                 }
             }
         }

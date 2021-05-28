@@ -1,10 +1,10 @@
 
 <div *ngIf="innerWidth>920">
-<div class="position-fixed" style="left:0;">
-  <ul class="list-group" *ngFor="let typ of lotTypes">
-  <li class="list-group-item" [ngClass]="{ 'active': type==typ.id}"(click)="foo(typ.id)">{{typ.lotType}}</li>
-</ul>
-</div>
+  <div class="position-fixed" style="left:0;">
+    <ul class="list-group" *ngFor="let typ of lotTypes">
+      <li class="list-group-item" [ngClass]="{ 'active': type==typ.id}" (click)="foo(typ.id)">{{typ.lotType}}</li>
+    </ul>
+  </div>
 </div>
 <div *ngIf="innerWidth>895" class="position-fixed" style="right:0px;">
   <ul class="list-group">
@@ -27,9 +27,16 @@
       <span>До начала торгов осталось</span>
       <app-count-down [dDay]="nowdate" [dDayEnd]="post.startDate"> </app-count-down>
     </div>
-    <app-ngui>
-      <img class="imgcard" *ngIf src="{{post.imageurl}}" (click)="slotinfo(post.id)" alt="Photo of a Shiba Inu" />
-    </app-ngui>
+    <div class="container" style="width:400px">
+      <a href="/slotinfo/{{post.id}}">
+        <owl-carousel [options]="carouselOptions" [items]="post.imageurl">
+          <div class="item" *ngFor="let image of post.imageurl;let i= index">
+            <app-image-loader class="slide-image" [image]="image"></app-image-loader>
+          </div>
+        </owl-carousel>
+        </a>
+    </div>
+    <!--<app-image-loader [image]="post.imageurl" (click)="slotinfo(post.id)"></app-image-loader>-->
     <mat-card-content>
       <p>Текущая цена: {{post.cost}}BUN</p>
     </mat-card-content>
@@ -39,5 +46,5 @@
       <button mat-button class="btn-warning" (click)="deleteslot(post.id)" *ngIf="userslot(post.user_id)">Delete</button>
     </mat-card-actions>
   </mat-card>
-  </div>
+</div>
 <mat-spinner style="margin:0 auto;" *ngIf="loadbar"></mat-spinner>

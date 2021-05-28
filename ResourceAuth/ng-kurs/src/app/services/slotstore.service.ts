@@ -68,10 +68,10 @@ getOrderById(id:number):Observable<Slots[]>
  addOrder(id:number):Observable<any>{
    return this.http.post(`${this.baseApiUrl}orders/add/`+id,{});
 }
-  addSlot(slot:Slots,file:File)
+  addSlot(slot:Slots,file:File[])
 {
-  let formdata= new FormData();
-  formdata.append("pic",file);
+    let formdata = new FormData();
+    file.forEach(x => formdata.append("pic", x));
   formdata.append("slotinfo",JSON.stringify(slot));
     return this.http.post(`${this.baseApiUrl}slots/addslot`,formdata);
 }
