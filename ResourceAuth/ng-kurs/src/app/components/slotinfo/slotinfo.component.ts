@@ -32,6 +32,14 @@ this.subscription=route.params.subscribe(params=>this.id=params['id']);
    this.bs.getOrderById(this.id).subscribe(res => { this.slots=res })
     this.isauth=this.auth.isAuthenticated();
   }
+  carouselOptions = {
+    margin: 25,
+    nav: true,
+    center: true,
+    navText: ["<div class='nav-btn prev-slide'></div>", "<div class='nav-btn next-slide'></div>"],
+    responsiveClass: true,
+    items: 1
+  }
   checkdate(db: string) {
     return (Date.parse(db) - new Date().getTime()) > 0;
   }

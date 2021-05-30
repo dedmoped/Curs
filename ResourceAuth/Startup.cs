@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Hangfire;
 using ResourceAuth.Jobs;
 using System;
+using ResourceAuth.services;
 
 namespace ResourceAuth
 {
@@ -73,6 +74,9 @@ namespace ResourceAuth
             services.AddSingleton<IRemoveOrders, RemoveOrderJob>();
             services.AddSingleton<IEmailSender, SendEmail>();
             services.AddSingleton<ILotsStatus, Jobs.LotStatus>();
+            services.AddTransient<IRatingService, RatingService>();
+            services.AddTransient<ILotService, LotService>();
+            services.AddTransient<IOrdersService, OrderService>();
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ng-kurs/dist";

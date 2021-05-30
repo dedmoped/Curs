@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ResourceAuth.Help;
 using ResourceAuth.Models;
+using ResourceAuth.services;
 
 namespace ResourceAuth.Controllers
 {
@@ -19,12 +20,16 @@ namespace ResourceAuth.Controllers
     public class SlotsController : ControllerBase
     {
         private readonly ApplicationContext store;
+        private readonly IRatingService rating;
+        private readonly ILotService lotService;
         private int UserID => Int32.Parse(User.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value);
         static List<IFormFile> files;
         static List<string> str = new List<string>() { };
-        public SlotsController(ApplicationContext store)
+        public SlotsController(ApplicationContext store,IRatingService rating,ILotService lotService)
         {
             this.store = store;
+            this.rating = rating;
+            this.lotService = lotService;
             if (!store.lotTypes.Any())
             {
                 store.lotTypes.Add(new LotTypes() { LotType = "Детские игрушки", Description = "Иформация об Детские игрушки" });
@@ -42,30 +47,14 @@ namespace ResourceAuth.Controllers
         [Route("lotList/{id}/{type}/{asc}/{status}")]
         public IEnumerable<Lot> GetAllSlots(int id,int type,bool asc,int status)
         {
-            int skipedpages = id == 1 ? 0 : 5 * id;
-            int takepages = id == 1 ? 10 : 5;
-            IQueryable<Lots>lots=store.lots.Where(x=>x.status_id == status);
-            if (type!=0)
-            {
-               lots= lots.Where(x => x.type_id == type);
-            }
-            lots = asc == false ? lots.OrderBy(x => x.Id).ThenByDescending(x=>x.EndDate): lots.OrderBy(x => x.Id).ThenBy(x=>x.EndDate);
-            return lots.Skip(skipedpages).Take(takepages).Select(Lot.Create).ToList();
+            return lotService.GetAllSlots(id, type, asc, status);
         }
 
         [HttpGet]
         [Route("rate/{id}")]
         public double GetRating(int id)
         {
-            try
-            {
-                return store.rating.Where(d => d.SellerId == id).Average(x => x.Rate);
-            }
-            catch
-            {
-                return 0;
-            }
-                
+           return rating.GetRating(id);                
         }
 
         [HttpDelete]
@@ -75,9 +64,7 @@ namespace ResourceAuth.Controllers
         {
             try
             {
-                store.orders.RemoveRange(store.orders.Where(b => b.Slotid == id));
-                store.lots.RemoveRange(store.lots.Where(b => b.Id == id));
-                store.SaveChanges();
+                lotService.DeleteSlot(id);
                 return Ok();
             }
             catch
@@ -91,11 +78,7 @@ namespace ResourceAuth.Controllers
         [Route("setrate/{sellerid}/{currentrate}")]
         public decimal Getuserrate(int sellerid, int currentrate)
         {
-            store.rating.RemoveRange(store.rating.Where(d => d.SellerId == sellerid && d.UserId==UserID));
-            store.SaveChanges();
-            store.rating.Add(new Rating() { UserId = UserID, SellerId = sellerid, Rate = currentrate });
-            store.SaveChanges();
-            return currentrate;
+           return rating.SetRating(sellerid, currentrate, UserID);
         }
 
         [HttpGet]
@@ -103,29 +86,20 @@ namespace ResourceAuth.Controllers
         [Route("getcurrentuserrate/{sellerid}")]
         public decimal getCurrentRating(int sellerid)
         {
-            var rate = store.rating.Where(x => x.SellerId == sellerid && x.UserId == UserID);
-            if (rate != null)
-            {
-                if(rate.FirstOrDefault()!=null)
-                return rate.FirstOrDefault().Rate;
-            }
-            return 0;
+          return rating.getCurrentRating(sellerid, UserID);
         }
 
         [HttpPost]
         [Authorize(Roles = "user")]
         [Route("byeslot/{slotid}/{newprice}")]
-        public IActionResult ByeSlot(int slotid,int newprice)
+        public IActionResult ByeSlot(int slotid, int newprice)
         {
             try
             {
-                store.orders.RemoveRange(store.orders.Where(d => d.Slotid == slotid && d.Userid == UserID));
-                store.lots.Where(sl => sl.Id == slotid).FirstOrDefault().Cost = newprice;
-                store.orders.Add(new Orders() { Slotid = slotid, Userid = UserID, Userprice = newprice });
-                store.SaveChanges();
+                lotService.ByeSlot(slotid, newprice, UserID);
                 return Ok("Успешно");
             }
-            catch (Exception ex)
+            catch
             {
                 return BadRequest("Ошибка покупки");
             }
@@ -143,15 +117,7 @@ namespace ResourceAuth.Controllers
         [Route("addslot")]
         public void AddUserSlot([FromForm]List<IFormFile> pic,[FromForm]string slotinfo)
         {
-            Lots lot = JsonConvert.DeserializeObject<Lots>(slotinfo);
-            files = pic;
-            var task = Task.Run((Func<Task>)SlotsController.Run);
-            task.Wait();
-           // store.orders.RemoveRange(store.orders.Where(d => d.Slotid == add.Id && d.Userid == UserID));
-            string c = store.accounts.Where(b => b.Id == UserID).SingleOrDefault().Email;
-            Lots newSlot = new Lots() {Description= lot.Description,Seller=c,Cost= lot.Cost,user_id=UserID,EndDate= lot.EndDate,StartDate= lot.StartDate,status_id=0,Title= lot.Title,type_id= lot.type_id,Imageurl=JsonConvert.SerializeObject(str)};
-            store.lots.Add(newSlot);
-            store.SaveChanges();
+            lotService.AddUserSlot(pic, slotinfo, UserID);
         }
 
         static async Task Run()

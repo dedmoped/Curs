@@ -17,7 +17,13 @@
       <span>До начала торгов осталось</span>
       <app-count-down [dDay]="nowdate" [dDayEnd]="slot.startDate"> </app-count-down>
     </div>
-      <img mat-card-image class="imgcard app-ngui " src="{{slot.imageurl}}" alt="Photo of a Shiba Inu">
+    <div class="container" style="width:400px">
+        <owl-carousel [options]="carouselOptions" [items]="slot.imageurl">
+          <div class="item" *ngFor="let image of slot.imageurl;let i= index">
+            <app-image-loader class="slide-image" [image]="image"></app-image-loader>
+          </div>
+        </owl-carousel>
+    </div>
       <mat-card-content>
         <div class="container">
           <input type="hidden" value="{{slot.id}}" #id />

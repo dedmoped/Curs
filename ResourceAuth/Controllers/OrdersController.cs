@@ -12,6 +12,7 @@ using ResourceAuth.Models;
 using Dropbox.Api.Files;
 using Newtonsoft.Json;
 using ResourceAuth.Help;
+using ResourceAuth.services;
 
 namespace ResourceAuth.Controllers
 {
@@ -21,38 +22,41 @@ namespace ResourceAuth.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly ApplicationContext store;
+        private readonly IOrdersService ordersService;
         private readonly SlotsStore slot;
         static IFormFile file1;
         private static string str;
         private int UserID =>Int32.Parse(User.Claims.Single(c=>c.Type==ClaimTypes.NameIdentifier).Value);
-        public OrdersController(ApplicationContext store,SlotsStore slots)
+        public OrdersController(ApplicationContext store,SlotsStore slots,IOrdersService ordersService)
         {
             this.store = store;
             this.slot = slots;
+            this.ordersService = ordersService;
         }
         [HttpGet]
         [Authorize(Roles ="user")]
         [Route("")]
         public IActionResult GetOrders()
         {
-            if (!store.orders.Where(b => b.Userid == UserID).Select(g=>g.Userid).Contains(UserID)) return Ok(Enumerable.Empty<Lots>());
-            var c = store.orders.Where(b=>b.Userid==UserID);
-            var sel = c.Select(f => f.Slotid);
-            var orderedBooks = store.lots.Where(b => sel.Contains(b.Id)).ToList();
-            ///var user = store.orders.Where(d => sel.Contains(d.Slotid)).OrderByDescending(x=>x.Userprice).GroupBy(x => x.Slotid).ToList();
-            //var listprices = store.orders.Where(x => sel.Contains(x.Slotid)).ToList();
-            List<WhoTakeLot> whoTakeLots = new List<WhoTakeLot>();
-            var c1 = store.orders.Where(b => sel.Contains(b.Slotid));
+            //if (!store.orders.Where(b => b.Userid == UserID).Select(g=>g.Userid).Contains(UserID)) return Ok(Enumerable.Empty<Lots>());
+            //var c = store.orders.Where(b=>b.Userid==UserID);
+            //var sel = c.Select(f => f.Slotid);
+            //var orderedBooks = store.lots.Where(b => sel.Contains(b.Id)).ToList();
+            /////var user = store.orders.Where(d => sel.Contains(d.Slotid)).OrderByDescending(x=>x.Userprice).GroupBy(x => x.Slotid).ToList();
+            ////var listprices = store.orders.Where(x => sel.Contains(x.Slotid)).ToList();
+            //List<WhoTakeLot> whoTakeLots = new List<WhoTakeLot>();
+            //var c1 = store.orders.Where(b => sel.Contains(b.Slotid));
 
-            foreach (var pr in orderedBooks)
-            {
-                var uord = store.orders.Where(x => x.Userid == UserID && x.Slotid==pr.Id).FirstOrDefault();
-                var ord=store.orders.Where(x => x.Slotid == pr.Id).OrderByDescending(x => x.Userprice).FirstOrDefault();
-                var user = store.accounts.Where(x => x.Id == ord.Userid).FirstOrDefault();
-                whoTakeLots.Add(new WhoTakeLot() { user = user, ordprice = uord });
-            }
-            
-            return Ok(new { orders = orderedBooks, userprice = whoTakeLots});
+            //foreach (var pr in orderedBooks)
+            //{
+            //    var uord = store.orders.Where(x => x.Userid == UserID && x.Slotid==pr.Id).FirstOrDefault();
+            //    var ord=store.orders.Where(x => x.Slotid == pr.Id).OrderByDescending(x => x.Userprice).FirstOrDefault();
+            //    var user = store.accounts.Where(x => x.Id == ord.Userid).FirstOrDefault();
+            //    whoTakeLots.Add(new WhoTakeLot() { user = user, ordprice = uord });
+            //}
+
+            //return Ok(new { orders = orderedBooks, userprice = whoTakeLots});
+            return ordersService.GetOrders(UserID);
         }
 
 
@@ -61,23 +65,24 @@ namespace ResourceAuth.Controllers
         [Route("ord")]
         public IActionResult GetuserlotsOrders()
         {
-            if (!store.lots.Where(b => b.user_id == UserID).Select(g => g.user_id).Contains(UserID)) return Ok(Enumerable.Empty<Lots>());
-            var c = store.lots.Where(b => b.user_id == UserID);
-            var sel = c.Select(f => f.Id);
-            var orderedBooks = store.lots.Where(b => sel.Contains(b.Id)).ToList();
-            ///var user = store.orders.Where(d => sel.Contains(d.Slotid)).OrderByDescending(x=>x.Userprice).GroupBy(x => x.Slotid).ToList();
-            //var listprices = store.orders.Where(x => sel.Contains(x.Slotid)).ToList();
-            List<WhoTakeLot> whoTakeLots = new List<WhoTakeLot>();
-            var c1 = store.orders.Where(b => sel.Contains(b.Slotid));
+            //if (!store.lots.Where(b => b.user_id == UserID).Select(g => g.user_id).Contains(UserID)) return Ok(Enumerable.Empty<Lots>());
+            //var c = store.lots.Where(b => b.user_id == UserID);
+            //var sel = c.Select(f => f.Id);
+            //var orderedBooks = store.lots.Where(b => sel.Contains(b.Id)).ToList();
+            /////var user = store.orders.Where(d => sel.Contains(d.Slotid)).OrderByDescending(x=>x.Userprice).GroupBy(x => x.Slotid).ToList();
+            ////var listprices = store.orders.Where(x => sel.Contains(x.Slotid)).ToList();
+            //List<WhoTakeLot> whoTakeLots = new List<WhoTakeLot>();
+            //var c1 = store.orders.Where(b => sel.Contains(b.Slotid));
 
-            foreach (var pr in orderedBooks)
-            {
-                var ord = store.orders.Where(x => x.Slotid == pr.Id).OrderByDescending(x => x.Userprice).FirstOrDefault();
-                var user = ord != null?store.accounts.Where(x => x.Id == ord.Userid).FirstOrDefault():null;
-                whoTakeLots.Add(new WhoTakeLot() { user = user, ordprice = ord });
-            }
+            //foreach (var pr in orderedBooks)
+            //{
+            //    var ord = store.orders.Where(x => x.Slotid == pr.Id).OrderByDescending(x => x.Userprice).FirstOrDefault();
+            //    var user = ord != null?store.accounts.Where(x => x.Id == ord.Userid).FirstOrDefault():null;
+            //    whoTakeLots.Add(new WhoTakeLot() { user = user, ordprice = ord });
+            //}
 
-            return Ok(new { orders = orderedBooks, userprice = whoTakeLots });
+            //return Ok(new { orders = orderedBooks, userprice = whoTakeLots });
+            return ordersService.GetuserlotsOrders(UserID);
         }
 
 
@@ -162,7 +167,7 @@ namespace ResourceAuth.Controllers
         [Route("getslotbyid/{id}")]
         public IActionResult getSlotById(int id)
         {
-            var orderedBooks = store.lots.Where(b => b.Id==id && (b.status_id==2 || b.status_id==1));
+            var orderedBooks = store.lots.Where(b => b.Id==id && (b.status_id==2 || b.status_id==1)).Select(Lot.Create).ToList();
             return Ok(orderedBooks);
         }
 

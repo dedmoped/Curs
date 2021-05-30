@@ -35,11 +35,15 @@
         <span>До начала торгов осталось</span>
         <app-count-down [dDay]="nowdate" [dDayEnd]="ord.startDate"> </app-count-down>
       </div>
-      <a href="/slotinfo/{{ord.id}}">
-        <app-ngui>
-          <img mat-card-image class="imgcard" *ngIf src="{{ord.imageurl}}" (click)="slotinfo(post.id)" alt="Photo of a Shiba Inu" />
-        </app-ngui>
-      </a>
+      <div class="container" style="width:400px">
+        <a href="/slotinfo/{{ord.id}}">
+          <owl-carousel [options]="carouselOptions" [items]="ord.imageurl">
+            <div class="item" *ngFor="let image of ord.imageurl;let i= index">
+              <app-image-loader class="slide-image" [image]="image"></app-image-loader>
+            </div>
+          </owl-carousel>
+        </a>
+      </div>
     </div>
     <mat-card-content style="left:0px;">
       <p class="card-text" *ngIf="userPrice[i].ordprice!=null && !userslot(ord.user_id)">Вы поставили <span style="color:#531313">{{userPrice[i].ordprice.userprice}}</span></p>

@@ -22,6 +22,14 @@ export class OrdersComponent implements OnInit {
   userwithmaxprice: any
   constructor(private bs: SlotstoreService, private ds: DataService, public dialog: MatDialog, private auth: AuthService) { }
 
+carouselOptions = {
+    margin: 25,
+    nav: true,
+    center: true,
+    navText: ["<div class='nav-btn prev-slide'></div>", "<div class='nav-btn next-slide'></div>"],
+    responsiveClass: true,
+    items: 1
+  }
   ngOnInit(): void {
     this.ds.currentMessage.subscribe(message => this.filterText = message);
     this.bs.getOrders().subscribe(res => { this.orders = res["orders"], this.userPrice = res["userprice"], console.log(res["userprice"])})
