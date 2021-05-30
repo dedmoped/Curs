@@ -68,7 +68,7 @@ namespace ResourceAuth
             });
 
             services.AddSingleton(new SlotsStore());
-            string connectionString = "Server=tcp:cursov.database.windows.net,1433;Initial Catalog=authdatabase;Persist Security Info=False;User ID=dedmoped;Password=Passw0rd;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+            string connectionString = "Server=tcp:auctiondataweb.database.windows.net,1433;Initial Catalog=Auction;Persist Security Info=False;User ID=dedmoped;Password=Passw0rd;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString));
             services.AddSingleton<IRemoveOrders, RemoveOrderJob>();
             services.AddSingleton<IEmailSender, SendEmail>();

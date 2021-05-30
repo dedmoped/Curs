@@ -141,15 +141,15 @@ namespace ResourceAuth.Controllers
         [HttpPost]
         [Authorize(Roles = "user")]
         [Route("addslot")]
-        public void AddUserSlot([FromForm]List<IFormFile> pic,[FromForm]Lots slotinfo)
+        public void AddUserSlot([FromForm]List<IFormFile> pic,[FromForm]string slotinfo)
         {
-            
+            Lots lot = JsonConvert.DeserializeObject<Lots>(slotinfo);
             files = pic;
             var task = Task.Run((Func<Task>)SlotsController.Run);
             task.Wait();
            // store.orders.RemoveRange(store.orders.Where(d => d.Slotid == add.Id && d.Userid == UserID));
             string c = store.accounts.Where(b => b.Id == UserID).SingleOrDefault().Email;
-            Lots newSlot = new Lots() {Description= slotinfo.Description,Seller=c,Cost= slotinfo.Cost,user_id=UserID,EndDate= slotinfo.EndDate,StartDate= slotinfo.StartDate,status_id=0,Title= slotinfo.Title,type_id= slotinfo.type_id,Imageurl=JsonConvert.SerializeObject(str)};
+            Lots newSlot = new Lots() {Description= lot.Description,Seller=c,Cost= lot.Cost,user_id=UserID,EndDate= lot.EndDate,StartDate= lot.StartDate,status_id=0,Title= lot.Title,type_id= lot.type_id,Imageurl=JsonConvert.SerializeObject(str)};
             store.lots.Add(newSlot);
             store.SaveChanges();
         }
