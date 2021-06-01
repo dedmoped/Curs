@@ -93,7 +93,7 @@ removephoto(){
       this.changes.type_id = this.slotValidation.controls['Type'].value;
       console.log(this.changes);
       this.spinerlot = true;
-      this.bs.addSlot(this.changes, this.files).subscribe(res => { this.spinerlot = false, this.toastr.info("Вашлот появится через минуту") }, err => { this.spinerlot = false, console.log(err) });
+      this.bs.addSlot(this.changes, this.files).subscribe(res => { this.spinerlot = false, this.toastr.info("Ваш лот появится через минуту") }, err => { this.spinerlot = false, console.log(err) });
     }
     else {
       alert("Проверьте поля и картинку")

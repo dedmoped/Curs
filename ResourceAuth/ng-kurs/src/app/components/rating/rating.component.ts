@@ -10,6 +10,7 @@ import { FormControl, Validators } from '@angular/forms';
 export class RatingComponent implements OnInit {
 
   @Input() sellerid: any;
+  @Input() order: boolean = false;
   spinerrating: boolean = true;
   currentRate: any;
   userRating: any=0;

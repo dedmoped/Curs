@@ -23,9 +23,9 @@
   <mat-card>
     <div class="example-card">
       <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
+        <!--<div mat-card-avatar class="example-header-image"></div>-->
         <mat-card-title>Продавец:{{ord.seller}}</mat-card-title>
-        <app-rating [sellerid]="ord.user_id" [readonl]="true"></app-rating>
+        <app-rating *ngIf="isyours(userPrice[i].user.email)" [sellerid]="ord.user_id" [readonl]="true" [order]="true"></app-rating>
       </mat-card-header>
       <div *ngIf="!checkdate(ord.startDate)">
         <span>До конца торгов осталось</span>

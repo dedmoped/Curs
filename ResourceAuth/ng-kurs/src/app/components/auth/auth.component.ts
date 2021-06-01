@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
@@ -8,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class AuthComponent implements OnInit {
 
-  constructor(private as:AuthService, private router: Router) { }
+  constructor(private as: AuthService, private router: Router, private toastr: ToastrService) { }
 
   ngOnInit(): void {
 
@@ -20,8 +21,8 @@ export class AuthComponent implements OnInit {
     this.as.login(email,password).subscribe(res=>
       {
 console.log(res);
-      },error=>{
-        alert("Wrong login or password")
+    }, error => {
+      this.toastr.error("Неверный логин или пароль")
       })
   }
   logout(){

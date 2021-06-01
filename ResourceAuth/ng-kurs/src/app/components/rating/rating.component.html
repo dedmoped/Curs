@@ -10,6 +10,7 @@
     <div class="col-lg">
       <ngb-rating [(ngModel)]="currentRate" [starTemplate]="t" [readonly]="false" *ngIf="!readonl" [max]="5" (click)="changerate()"></ngb-rating>
       <ngb-rating [(rate)]="currentRate" [starTemplate]="t" [readonly]="true" [max]="5" *ngIf="readonl"></ngb-rating>
+      <ngb-rating [(ngModel)]="userRating" [starTemplate]="t" [readonly]="false"  [max]="5" (click)="changerate()" *ngIf="order"></ngb-rating>
     </div>
     <div class="col-lg text-right" *ngIf="!readonl">
       <span *ngIf="userRating==0" class="spinner-border spinner-border-sm"></span>

@@ -46,10 +46,12 @@ import { UserpageComponent } from './components/userpage/userpage.component';
 import { RecentlylookComponent } from './components/recentlylook/recentlylook.component';
 import { FavoriteLotsComponent } from './components/favorite-lots/favorite-lots.component';
 import { CountDownComponent } from './components/count-down/count-down.component';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import {ToastrModule} from 'ngx-toastr';
 import { OwlModule } from 'ngx-owl-carousel';
 import { ImageLoaderComponent } from './components/image-loader/image-loader.component';
 import { RatingstatisticComponent } from './components/ratingstatistic/ratingstatistic.component'; 
+import { ChartsModule } from 'ng2-charts';
 export function tokenGetter(){
   return localStorage.getItem(ACCESS_TOKEN_KEY);
 }
@@ -96,6 +98,7 @@ export function tokenGetter(){
     MatDatepickerModule,
     MatSelectModule,
     Ng2SearchPipeModule,
+    MatButtonToggleModule,
     MatProgressSpinnerModule,
     BrowserModule,
     BrowserAnimationsModule,
@@ -108,7 +111,8 @@ export function tokenGetter(){
     TextFieldModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
-    OwlModule,  
+    OwlModule,
+    ChartsModule,  
     SlimLoadingBarModule.forRoot(),
     ToastrModule.forRoot({
       timeOut:10000,

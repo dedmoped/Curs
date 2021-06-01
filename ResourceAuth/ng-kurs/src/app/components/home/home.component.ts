@@ -65,13 +65,12 @@ export class HomeComponent implements OnInit,AfterViewInit {
     this.ds.currentMessage.subscribe(message => this.filterText = message);
     
   }
-  checkdate(db: string) {
-    var time = (Date.parse(db) - new Date().getTime()) > 0;
-    if (this.status == 1 && !time) {
-      return true;
+  checkdate(db: string,end:string) {
+    if (this.status == 1) {
+      return !(new Date().getTime()-Date.parse(end) > 0);
     }
-    if (this.status == 2 && time) {
-      return true;
+    if (this.status == 2) {
+      return (Date.parse(db) - new Date().getTime()) > 0;
     }
     return false;
   }

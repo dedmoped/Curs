@@ -7,6 +7,7 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../../services/auth.service';
 export const ACCESS_ID = 'slotstore_access_id'
+export const ACCESS_NAME = 'slotstore_access_name'
 
 @Component({
   selector: 'app-orders',
@@ -39,6 +40,9 @@ carouselOptions = {
     console.log("data");
   }
 
+  isyours(email: string) {
+    return localStorage.getItem(ACCESS_NAME) == email;
+  }
   getByLots() {
     this.bs.getOrders().subscribe(res => { this.orders = res["orders"], this.userPrice = res["userprice"], console.log(res["userprice"]) })
   }

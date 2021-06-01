@@ -20,4 +20,7 @@ export class AccountService {
     formdata.append("accounts", JSON.stringify(acc));
     return this.http.post(`${this.baseApiUrl}accounts/Account`, formdata);
     }
+    getStatistic(){
+      return this.http.get(`${this.baseApiUrl}accounts/Stat`);
+    }
 }

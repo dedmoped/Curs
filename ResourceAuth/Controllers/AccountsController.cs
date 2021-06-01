@@ -50,5 +50,20 @@ namespace ResourceAuth.Controllers
             //database.Mobile = add.Mobile;
             //db.SaveChanges();
         } 
+
+        [HttpGet]
+        [Route("Stat")]
+        public IActionResult GetStatistic()
+        {
+            List<RatingStatistic> ratingStatistics = new List<RatingStatistic>();
+            var users = db.rating.AsEnumerable().GroupBy(x => x.SellerId).ToList();
+            foreach (var c in users)
+            {
+                var email = db.accounts.Where(x => x.Id == c.Key).FirstOrDefault().Email;
+                var p = db.rating.Where(x=>x.SellerId==c.Key).Average(x=>x.Rate);
+                ratingStatistics.Add(new RatingStatistic() { statistic = p, email = email, sellerId = 1 });
+            }
+            return Ok(ratingStatistics);
+        }
     }
 }

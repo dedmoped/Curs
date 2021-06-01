@@ -71,9 +71,9 @@ namespace ResourceAuth
             services.AddSingleton(new SlotsStore());
             string connectionString = "Server=tcp:auctiondataweb.database.windows.net,1433;Initial Catalog=Auction;Persist Security Info=False;User ID=dedmoped;Password=Passw0rd;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString));
-            services.AddSingleton<IRemoveOrders, RemoveOrderJob>();
-            services.AddSingleton<IEmailSender, SendEmail>();
-            services.AddSingleton<ILotsStatus, Jobs.LotStatus>();
+            //services.AddSingleton<IRemoveOrders, RemoveOrderJob>();
+            //services.AddScoped<IEmailSender, SendEmail>();
+            services.AddTransient<ILotsStatus, Jobs.LotStatus>();
             services.AddTransient<IRatingService, RatingService>();
             services.AddTransient<ILotService, LotService>();
             services.AddTransient<IOrdersService, OrderService>();
