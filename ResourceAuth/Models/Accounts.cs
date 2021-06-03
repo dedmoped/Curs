@@ -15,6 +15,8 @@ namespace ResourceAuth.Models
         public string Description { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public bool IsVerified { get; set; }
+        public string VerificationCode { get; set; }
         public int RoleId { get; set; }  
         public Role UserRoles { get; set; }
     }

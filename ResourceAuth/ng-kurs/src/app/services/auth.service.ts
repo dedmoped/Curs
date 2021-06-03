@@ -16,6 +16,10 @@ export const ACCESS_NAME = 'slotstore_access_name'
   providedIn: 'root'
 })
 export class AuthService {
+  VerifyAccount(userId: number, userCode: string) {
+    console.log(userCode);
+    return this.http.get(`${this.apiUrl}api/auth/verify?Code=` + userCode + "&userId=" + userId);
+  }
   register(email: string, password: string, phone: string, name: string) {
     return this.http.post(`${this.apiUrl}api/auth/register`, { "Email":email,"Password":password,"Mobile":phone,"Name":name})
   }

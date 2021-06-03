@@ -16,6 +16,7 @@ import {
 } from './services/auth-guard.service';
 import { UserpageComponent } from './components/userpage/userpage.component';
 import { RatingstatisticComponent } from './components/ratingstatistic/ratingstatistic.component';
+import { VerificationComponent } from './components/verification/verification.component';
 const routes: Routes = [
   {
     path: '', component: HomeComponent, resolve: {
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'slotinfo/:id', component: SlotinfoComponent },
   { path: 'statistic', component: RatingstatisticComponent },
   {path:'userpage',component:UserpageComponent},
+  {path:'verify',component:VerificationComponent},
   { path: '**', component: ErroComponent },
 ];
 @NgModule({

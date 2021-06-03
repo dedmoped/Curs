@@ -1,0 +1,3 @@
+<h3 style="text-align:center" *ngIf="!spiner && !error">Верификация прошла успешно</h3>
+<h3  style="text-align:center" *ngIf="!spiner && error">Ошибка верификации</h3>
+<mat-spinner style="margin:0 auto;" *ngIf="spiner"></mat-spinner>

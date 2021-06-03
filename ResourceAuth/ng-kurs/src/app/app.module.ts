@@ -52,6 +52,7 @@ import { OwlModule } from 'ngx-owl-carousel';
 import { ImageLoaderComponent } from './components/image-loader/image-loader.component';
 import { RatingstatisticComponent } from './components/ratingstatistic/ratingstatistic.component'; 
 import { ChartsModule } from 'ng2-charts';
+import { VerificationComponent } from './components/verification/verification.component';
 export function tokenGetter(){
   return localStorage.getItem(ACCESS_TOKEN_KEY);
 }
@@ -79,6 +80,7 @@ export function tokenGetter(){
     CountDownComponent,
     ImageLoaderComponent,
     RatingstatisticComponent,
+    VerificationComponent,
   ],
   imports: [
     BrowserModule,
