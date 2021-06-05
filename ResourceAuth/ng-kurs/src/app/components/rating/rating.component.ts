@@ -10,6 +10,7 @@ import { FormControl, Validators } from '@angular/forms';
 export class RatingComponent implements OnInit {
 
   @Input() sellerid: any;
+  @Input() lotid: any;
   @Input() order: boolean = false;
   spinerrating: boolean = true;
   currentRate: any;
@@ -20,11 +21,11 @@ export class RatingComponent implements OnInit {
   ngOnInit(): void {
     console.log("ngOnInit")
     this.ds.getSlotRating(this.sellerid).subscribe(res => { this.currentRate = res, this.spinerrating = false }, err => { this.spinerrating = false });
-    this.ds.getCurrentUserRating(this.sellerid).subscribe(res => { this.userRating = res, this.spinerrating = false }, err => {this.spinerrating = false });
+    //this.ds.getCurrentUserRating(this.sellerid).subscribe(res => { this.userRating = res, this.spinerrating = false }, err => {this.spinerrating = false });
   }
   changerate() {
     this.userRating = 0;
-    this.ds.setRate(this.sellerid, this.currentRate).toPromise().then(
+    this.ds.setRate(this.sellerid, this.currentRate, this.lotid).toPromise().then(
        (data)=> {
         this.userRating = data;
         this.ds.getSlotRating(this.sellerid).toPromise().then((info) => { this.spinerrating = false; this.currentRate = info;});

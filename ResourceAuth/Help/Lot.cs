@@ -22,8 +22,11 @@ namespace ResourceAuth.Help
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int user_id { get; set; }
+        public Accounts userid { get; set; }
         public int type_id { get; set; }
+        public LotTypes typeid { get; set; }
         public int status_id { get; set; }
+        public LotStatus statusid { get; set; }
 
 
         public static Lot Create(Lots _lot)

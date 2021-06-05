@@ -75,10 +75,10 @@ namespace ResourceAuth.Controllers
 
         [HttpPost]
 
-        [Route("setrate/{sellerid}/{currentrate}")]
-        public decimal Getuserrate(int sellerid, int currentrate)
+        [Route("setrate/{sellerid}/{currentrate}/{lotId}")]
+        public decimal Getuserrate(int sellerid, int currentrate,int lotId)
         {
-           return rating.SetRating(sellerid, currentrate, UserID);
+           return rating.SetRating(sellerid, currentrate, UserID,lotId);
         }
 
         [HttpGet]

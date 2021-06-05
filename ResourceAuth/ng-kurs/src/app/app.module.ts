@@ -118,7 +118,7 @@ export function tokenGetter(){
     SlimLoadingBarModule.forRoot(),
     ToastrModule.forRoot({
       timeOut:10000,
-      positionClass:'toast-bottom-right',
+      positionClass:'toast-bottom-left',
       preventDuplicates:true
     }),
     JwtModule.forRoot({

@@ -47,5 +47,13 @@ this.subscription=route.params.subscribe(params=>this.id=params['id']);
     this.changes.cost = price.toString();
    this.changes.description=description;
    this.bs.updateSlot(this.changes,this.files[0]).subscribe();
-    }
+  }
+  carouselOptions = {
+    margin: 25,
+    nav: true,
+    center: true,
+    navText: ["<div class='nav-btn prev-slide'></div>", "<div class='nav-btn next-slide'></div>"],
+    responsiveClass: true,
+    items: 1
+  }
 }

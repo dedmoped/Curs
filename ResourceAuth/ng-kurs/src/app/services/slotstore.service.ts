@@ -16,8 +16,8 @@ export class SlotstoreService {
   getCurrentUserRating(sellerid: number) {
     return this.http.get(`${this.apiUrl}api/slots/getcurrentuserrate/` + sellerid)
   }
-  setRate(sellerid: number, currentRate: number) {
-    return this.http.post(`${this.apiUrl}api/slots/setrate/` + sellerid + `/` + currentRate, {});
+  setRate(sellerid: number, currentRate: number, lotid: number) {
+    return this.http.post(`${this.apiUrl}api/slots/setrate/` + sellerid + `/` + currentRate + `/`+lotid, {});
     }
 
 private baseApiUrl=`${this.apiUrl}api/`;

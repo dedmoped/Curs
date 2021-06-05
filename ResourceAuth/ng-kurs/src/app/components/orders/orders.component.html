@@ -25,7 +25,11 @@
       <mat-card-header>
         <!--<div mat-card-avatar class="example-header-image"></div>-->
         <mat-card-title>Продавец:{{ord.seller}}</mat-card-title>
-        <app-rating *ngIf="isyours(userPrice[i].user.email)" [sellerid]="ord.user_id" [readonl]="true" [order]="true"></app-rating>
+        <div *ngIf="whoseLot">
+          <app-rating *ngIf="isyours(userPrice[i].user.email) && ord.status_id==4" [sellerid]="ord.user_id" [readonl]="false" [lotid]="ord.id"></app-rating>
+          <h4 *ngIf="isyours(userPrice[i].user.email) && ord.status_id==4">Оцените сделку</h4>
+        </div>
+        <app-rating *ngIf="ord.status_id!=4" [sellerid]="ord.user_id" [readonl]="true" [order]="true"></app-rating>
       </mat-card-header>
       <div *ngIf="!checkdate(ord.startDate)">
         <span>До конца торгов осталось</span>
@@ -56,8 +60,8 @@
       <p class="card-text">Текущая цена {{ord.cost}} RUB</p>
     </mat-card-content>
     <mat-card-actions>
-      <button class="btn-danger" *ngIf="!userslot(ord.user_id)" (click)="RemoveOrder(ord)">Delete</button>
-      <button class="btn-danger" *ngIf="userslot(ord.user_id)" (click)="deleteslot(ord.id)">Delete</button>
+      <!--<button class="btn-danger" *ngIf="!userslot(ord.user_id)" (click)="RemoveOrder(ord)">Delete</button>
+      <button class="btn-danger" *ngIf="userslot(ord.user_id)" (click)="deleteslot(ord.id)">Delete</button>-->
     </mat-card-actions>
   </mat-card>
   </div>

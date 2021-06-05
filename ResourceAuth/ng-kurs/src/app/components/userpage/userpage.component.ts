@@ -41,7 +41,10 @@ export class UserpageComponent implements OnInit {
    hideForm(){
     this.showForm=false;
   }
-   get f() { return this.userpageValidation.controls; }
+  get f() { return this.userpageValidation.controls; }
+  removeaccphoto() {
+    this.showForm = true;
+  }
 
    uploadFile(event) {
      for (let index = 0; index < event.length; index++) {

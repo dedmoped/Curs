@@ -15,8 +15,8 @@ export const ACCESS_NAME = 'slotstore_access_name'
   styleUrls: ['./orders.component.scss']
 })
 export class OrdersComponent implements OnInit {
-
-  orders: Slots[]
+  whoseLot = true;
+  orders: any;
   filterText: string;
   userPrice: any;
   nowdate = new Date().toISOString().substring(0, 16);
@@ -33,7 +33,7 @@ carouselOptions = {
   }
   ngOnInit(): void {
     this.ds.currentMessage.subscribe(message => this.filterText = message);
-    this.bs.getOrders().subscribe(res => { this.orders = res["orders"], this.userPrice = res["userprice"], console.log(res["userprice"])})
+    this.bs.getOrders().subscribe(res => { this.orders = res["orders"] ,console.log(res["orders"]), this.userPrice = res["userprice"], console.log(res["userprice"])})
   }
   foo(){
     console.log(this.userPrice)
@@ -44,11 +44,11 @@ carouselOptions = {
     return localStorage.getItem(ACCESS_NAME) == email;
   }
   getByLots() {
-    this.bs.getOrders().subscribe(res => { this.orders = res["orders"], this.userPrice = res["userprice"], console.log(res["userprice"]) })
+    this.bs.getOrders().subscribe(res => { this.orders = res["orders"], this.userPrice = res["userprice"], console.log(res["userprice"]), this.whoseLot = true })
   }
 
   getCreatedLots() {
-    this.bs.getYourLots().subscribe(res => { this.orders = res["orders"], this.userPrice = res["userprice"], console.log(res["userprice"]) })
+    this.bs.getYourLots().subscribe(res => { this.orders = res["orders"], this.userPrice = res["userprice"], console.log(res["userprice"]), this.whoseLot = false })
   }
   getmaxprice(id: string){
     this.bs.getuseremail(id).subscribe(res => {

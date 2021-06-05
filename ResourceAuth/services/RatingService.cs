@@ -37,11 +37,10 @@ namespace ResourceAuth.services
             }
         }
 
-        public decimal SetRating(int sellerid, int currentrate,int UserID)
+        public decimal SetRating(int sellerid, int currentrate,int UserID,int lotId)
         {
-            store.rating.RemoveRange(store.rating.Where(d => d.SellerId == sellerid && d.UserId == UserID));
-            store.SaveChanges();
             store.rating.Add(new Rating() { UserId = UserID, SellerId = sellerid, Rate = currentrate });
+            store.lots.Where(x => x.Id == lotId).FirstOrDefault().status_id = 6;
             store.SaveChanges();
             return currentrate;
         }

@@ -1,121 +1,115 @@
 <div *ngIf="isDataAvailable">
   <br />
- 
+
   <div *ngIf="!showForm" class="d-flex justify-content-center">
-    <div class="outlook">
-      <img class="image" width="300px" [src]="account[0].imageUrl" />
-    </div>
-
+    <app-image-loader *ngIf="!showForm"  [image]="account[0].imageUrl" (click)="removeaccphoto()"></app-image-loader>
   </div>
-  <br />
   <form [formGroup]="userpageValidation" (ngSubmit)="onSubmit()">
-    <div *ngIf="showForm" class="d-flex justify-content-center">
-      <div class="uploadfilecontainer" (click)="fileInput.click()" *ngIf="!checkphoto()" appDragDrop
-           (onFileDropped)="uploadFile($event)">
-        <input hidden type="file" accept="image/*"  #fileInput (change)="uploadFile($event.target.files)">
-      </div>
-      <div class="outlook" (click)="removephoto()">
-        <img class="image" width="300px" [src]="imgUrl[0]" *ngIf="checkphoto()" />
-      </div>
-    </div>
-    <div [hidden]="!showForm">
-      <div class="form-group row">
-        <div class="col-md-6 offset-md-3">
-          <label for="example-text-input" class="col-form-label">Описание</label>
-          <input class="form-control" type="text" formControlName="title" id="example-text-input" [ngClass]="{ 'is-invalid': submitted && f.title.errors }">
-          <div *ngIf="submitted && f.title.errors" class="invalid-feedback">
-            <div *ngIf="f.title.errors.required">Title is required</div>
-          </div>
+      <div *ngIf="showForm" class="d-flex justify-content-center">
+        <div class="uploadfilecontainer" (click)="fileInput.click()"  *ngIf="!checkphoto()" appDragDrop
+             (onFileDropped)="uploadFile($event)">
+          <input hidden type="file" accept="image/*" #fileInput (change)="uploadFile($event.target.files)">
+        </div>
+        <div class="outlook" (click)="removephoto()">
+          <img class="image" width="300px" [src]="imgUrl[0]" *ngIf="checkphoto()" />
         </div>
       </div>
-      <div class="form-group row">
-        <div class="col-md-6 offset-md-3">
-          <label for="example-name-input" class="col-form-label">Name</label>
-          <input class="form-control" type="text" formControlName="name" id="example-name-input" [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
-          <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-            <div *ngIf="f.name.errors.required">Name is required</div>
+      <div>
+        <div class="form-group row">
+          <div class="col-md-6 offset-md-3">
+            <label for="example-text-input" class="col-form-label">Описание</label>
+            <input class="form-control" type="text" formControlName="title" id="example-text-input" [ngClass]="{ 'is-invalid': submitted && f.title.errors }">
+            <div *ngIf="submitted && f.title.errors" class="invalid-feedback">
+              <div *ngIf="f.title.errors.required">Title is required</div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-md-6 offset-md-3">
-          <label for="example-email-input" class="col-form-label">Email</label>
-          <input class="form-control" type="email" formControlName="email" id="example-email-input" [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
-          <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-            <div *ngIf="f.email.errors.required">Email is required</div>
+        <div class="form-group row">
+          <div class="col-md-6 offset-md-3">
+            <label for="example-name-input" class="col-form-label">Name</label>
+            <input class="form-control" type="text" formControlName="name" id="example-name-input" [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+            <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+              <div *ngIf="f.name.errors.required">Name is required</div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-md-6 offset-md-3">
-          <label for="example-tel-input" class="col-form-label">Phone</label>
-          <input class="form-control" type="tel" formControlName="phone" placeholder="375(44)7032803" [ngClass]="{ 'is-invalid': submitted && f.phone.errors }">
-          <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
-            <div *ngIf="f.phone.errors.required">Phone is required</div>
-            <div *ngIf="f.phone.errors.minlength">Incorrect phone number</div>
+        <div class="form-group row">
+          <div class="col-md-6 offset-md-3">
+            <label for="example-email-input" class="col-form-label">Email</label>
+            <input class="form-control" type="email" formControlName="email" id="example-email-input" [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+              <div *ngIf="f.email.errors.required">Email is required</div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-md-6 offset-md-3">
-          <label for="example-password-input" class="col-form-label">Password</label>
-          <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
-          <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-            <div *ngIf="f.password.errors.required">Password is required</div>
-            <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+        <div class="form-group row">
+          <div class="col-md-6 offset-md-3">
+            <label for="example-tel-input" class="col-form-label">Phone</label>
+            <input class="form-control" type="tel" formControlName="phone" placeholder="375(44)7032803" [ngClass]="{ 'is-invalid': submitted && f.phone.errors }">
+            <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
+              <div *ngIf="f.phone.errors.required">Phone is required</div>
+              <div *ngIf="f.phone.errors.minlength">Incorrect phone number</div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-md-6 offset-md-3">
-          <label for="example-ConfirmPassword-input" class="col-form-label">ConfirmPassword</label>
-          <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
-          <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
-            <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
-            <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
+        <div class="form-group row">
+          <div class="col-md-6 offset-md-3">
+            <label for="example-password-input" class="col-form-label">Password</label>
+            <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+              <div *ngIf="f.password.errors.required">Password is required</div>
+              <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+            </div>
           </div>
         </div>
-      </div>
+        <div class="form-group row">
+          <div class="col-md-6 offset-md-3">
+            <label for="example-ConfirmPassword-input" class="col-form-label">ConfirmPassword</label>
+            <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
+            <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
+              <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
+              <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
+            </div>
+          </div>
+        </div>
 
-      <div class="form-group row">
-        <div class="col-md-6 offset-md-3">
-          <button class="btn btn-primary">Сохранить</button>
+        <div class="form-group row">
+          <div class="col-md-6 offset-md-3">
+            <button class="btn btn-primary">Сохранить</button>
+          </div>
         </div>
       </div>
-    </div>
-    <div [hidden]="showForm">
-      <div class="form-group row">
-        <div class="col-md-6 offset-md-3">
-          <label class="col-form-label">Описание</label>
-          <input class="form-control" type="text" value="{{account[0].description}}">
+      <!--<div [hidden]="showForm">
+        <div class="form-group row">
+          <div class="col-md-6 offset-md-3">
+            <label class="col-form-label">Описание</label>
+            <input class="form-control" type="text" value="{{account[0].description}}">
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-md-6 offset-md-3">
-          <label class="col-form-label">Name</label>
-          <input class="form-control" type="text" value="{{account[0].name}}">
+        <div class="form-group row">
+          <div class="col-md-6 offset-md-3">
+            <label class="col-form-label">Name</label>
+            <input class="form-control" type="text" value="{{account[0].name}}">
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-md-6 offset-md-3">
-          <label class="col-form-label">Email</label>
-          <input class="form-control" type="email" value="{{account[0].email}}">
+        <div class="form-group row">
+          <div class="col-md-6 offset-md-3">
+            <label class="col-form-label">Email</label>
+            <input class="form-control" type="email" value="{{account[0].email}}">
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-md-6 offset-md-3">
-          <label class="col-form-label">Phone</label>
-          <input class="form-control" type="tel" placeholder="375(44)7032803" value="{{account[0].mobile}}">
+        <div class="form-group row">
+          <div class="col-md-6 offset-md-3">
+            <label class="col-form-label">Phone</label>
+            <input class="form-control" type="tel" placeholder="375(44)7032803" value="{{account[0].mobile}}">
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-md-6 offset-md-3">
-          <label class="col-form-label">Password</label>
-          <input type="password" class="form-control" value="{{account[0].password}}" />
+        <div class="form-group row">
+          <div class="col-md-6 offset-md-3">
+            <label class="col-form-label">Password</label>
+            <input type="password" class="form-control" value="{{account[0].password}}" />
+          </div>
         </div>
-      </div>
-    </div>
-  </form>
-  <button class="btn btn-secondary" *ngIf="!showForm" (click)="shoForm()">Изменить</button>
-  <button class="btn btn-secondary" *ngIf="showForm" (click)="hideForm()">Вернуться</button>
-</div>
+      </div>-->
+    </form>
+  </div>
