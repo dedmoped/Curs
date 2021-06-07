@@ -22,7 +22,7 @@ export class AuthComponent implements OnInit {
       {
 console.log(res);
     }, error => {
-      this.toastr.error("Неверный логин или пароль")
+        this.toastr.error("Проверьте введенные данные и подтвердите почту");
       })
   }
   logout(){

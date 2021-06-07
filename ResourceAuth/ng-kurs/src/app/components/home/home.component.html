@@ -39,12 +39,12 @@
     </div>
     <!--<app-image-loader [image]="post.imageurl" (click)="slotinfo(post.id)"></app-image-loader>-->
     <mat-card-content>
-      <p>Текущая цена: {{post.cost}}BYN</p>
+      <p style="font-size:16px;">Текущая цена: {{post.cost}}BYN</p>
     </mat-card-content>
     <mat-card-actions>
       <!--<button mat-button class="btn-primary" (click)="addorder(post.id)" *ngIf="auth.isAuthenticated()">Add</button>-->
-      <button mat-button class="btn-secondary" (click)="updateslot(post.id)" *ngIf="userslot(post.user_id) && chektime(post.startDate)">Update</button>
-      <button mat-button class="btn-warning" (click)="deleteslot(post.id)" *ngIf="userslot(post.user_id) && chektime(post.startDate)">Delete</button>
+      <button mat-button class="btn-secondary" (click)="updateslot(post.id)" *ngIf="userslot(post.user_id) && chektime(post.startDate)">Обновить</button>
+      <button mat-button class="btn-warning" (click)="deleteslot(post.id)" *ngIf="userslot(post.user_id) && chektime(post.startDate)">Удалить</button>
     </mat-card-actions>
   </mat-card>
 </div>

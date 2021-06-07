@@ -1,6 +1,6 @@
 
   <div class="col-md-6 offset-md-3" style="border:solid white 2px;top:50px">
-    <h3 style="text-align:center"><span style="color:black">Регистрация</span></h3>
+    <!--<div style="text-align:center"><lable style="font-family: Arial; font-size: 18px;">Регистрация</lable></div>-->
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label>Имя</label>
@@ -41,7 +41,7 @@
         </div>
       </div>
       <div class="form-group">
-        <button class="btn btn-primary"><span *ngIf="registr" class="spinner-border spinner-border-sm"></span> Register</button>
+        <button class="btn btn-primary"><span *ngIf="registr" class="spinner-border spinner-border-sm"></span> Зарегистрироваться</button>
       </div>
     </form>
   </div>

@@ -18,6 +18,7 @@ export class OrdersComponent implements OnInit {
   whoseLot = true;
   orders: any;
   filterText: string;
+  isLoadingResults: boolean = true;
   userPrice: any;
   nowdate = new Date().toISOString().substring(0, 16);
   userwithmaxprice: any
@@ -33,7 +34,7 @@ carouselOptions = {
   }
   ngOnInit(): void {
     this.ds.currentMessage.subscribe(message => this.filterText = message);
-    this.bs.getOrders().subscribe(res => { this.orders = res["orders"] ,console.log(res["orders"]), this.userPrice = res["userprice"], console.log(res["userprice"])})
+    this.bs.getOrders().subscribe(res => { this.orders = res["orders"], console.log(res["orders"]), this.userPrice = res["userprice"], console.log(res["userprice"], this.isLoadingResults = false) })
   }
   foo(){
     console.log(this.userPrice)
@@ -44,11 +45,17 @@ carouselOptions = {
     return localStorage.getItem(ACCESS_NAME) == email;
   }
   getByLots() {
-    this.bs.getOrders().subscribe(res => { this.orders = res["orders"], this.userPrice = res["userprice"], console.log(res["userprice"]), this.whoseLot = true })
+    this.orders = [];
+    this.userPrice = [];
+    this.isLoadingResults = true;
+    this.bs.getOrders().subscribe(res => { this.orders = res["orders"], this.userPrice = res["userprice"], console.log(res["userprice"]), this.whoseLot = true, this.isLoadingResults = false })
   }
 
   getCreatedLots() {
-    this.bs.getYourLots().subscribe(res => { this.orders = res["orders"], this.userPrice = res["userprice"], console.log(res["userprice"]), this.whoseLot = false })
+    this.orders = [];
+    this.userPrice = [];
+    this.isLoadingResults = true;
+    this.bs.getYourLots().subscribe(res => { this.orders = res["orders"], this.userPrice = res["userprice"], console.log(res["userprice"]), this.whoseLot = false, this.isLoadingResults = false })
   }
   getmaxprice(id: string){
     this.bs.getuseremail(id).subscribe(res => {

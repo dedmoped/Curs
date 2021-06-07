@@ -8,6 +8,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Store_API_URL } from 'src/app/app-tokens';
 import {FormControl,Validators} from "@angular/forms"
 import { map } from 'jquery';
+import { ToastrService } from 'ngx-toastr';
 export const ACCESS_ID = 'slotstore_access_id'
 @Component({
   selector: 'app-slotinfo',
@@ -16,7 +17,7 @@ export const ACCESS_ID = 'slotstore_access_id'
 })
 export class SlotinfoComponent implements OnInit {
 
-  constructor(private bs: SlotstoreService, private auth: AuthService, private route: ActivatedRoute, @Inject(Store_API_URL) private apiUrl: string) 
+  constructor(private bs: SlotstoreService, private Toastr: ToastrService, private auth: AuthService, private route: ActivatedRoute, @Inject(Store_API_URL) private apiUrl: string) 
   { 
 this.subscription=route.params.subscribe(params=>this.id=params['id']);
   }
@@ -44,9 +45,13 @@ this.subscription=route.params.subscribe(params=>this.id=params['id']);
     return (Date.parse(db) - new Date().getTime()) > 0;
   }
   takeslot(newprice: number) {
-
-    console.log(this.slots);
-    this.bs.byeslot(this.slots[0].id, newprice).subscribe()
+    if (newprice.toString() <= this.slots[0].cost) {
+      this.Toastr.error("Цена не может быть меньше назначенной")
+    }
+    else {
+      console.log(this.slots);
+      this.bs.byeslot(this.slots[0].id, newprice).subscribe(res => this.Toastr.success("Цена установлена"), err => this.Toastr.error("Ошибка установки цены"))
+    }
   }
   lol() {
     alert("kek")
@@ -67,7 +72,7 @@ this.subscription=route.params.subscribe(params=>this.id=params['id']);
       return id == userid
     }
     else {
-      return false;
+      return true;
     }
   }
 }

@@ -174,7 +174,7 @@ namespace ResourceAuth.Controllers
         [HttpPost]
         [Authorize(Roles = "user")]
         [Route("update")]
-        public IActionResult updateslot([FromForm] IFormFile pic, [FromForm] string slot)
+        public IActionResult updateslot([FromForm] List<IFormFile> pic, [FromForm] string slot)
         {
             try
             {
@@ -182,19 +182,19 @@ namespace ResourceAuth.Controllers
                 var updatedata = store.lots.Where(b => b.Id == info.Id && b.user_id == UserID).FirstOrDefault();
                 if (updatedata != null)
                 {
-                    file1 = pic;
-                    if (file1 != null)
+                    if (pic.Count >0)
                     {
-                        var task = Task.Run((Func<Task>)OrdersController.Run);
+                        SaveImage saveImage = new SaveImage(pic);
+                        var task = saveImage.Run();
                         task.Wait();
-                        store.lots.Where(b => b.Id == info.Id).FirstOrDefault().Imageurl = str;
+                        store.lots.Where(b => b.Id == info.Id).FirstOrDefault().Imageurl = JsonConvert.SerializeObject(saveImage.str);
                     }
                     store.lots.Where(b => b.Id == info.Id && b.user_id == UserID).FirstOrDefault().Description = info.Description;
                     store.lots.Where(b => b.Id == info.Id).FirstOrDefault().Cost = info.Cost;
-                    store.lots.Where(b => b.Id == info.Id).FirstOrDefault().Seller = info.Seller;
+                    store.lots.Where(b => b.Id == info.Id).FirstOrDefault().Title = info.Title;
                     store.SaveChanges();
                 }
-                return Ok("Обновление прошло успешно");
+                return Ok(new { message = "Обновление прошло успешно" });
             }
             catch (Exception ex)
             {

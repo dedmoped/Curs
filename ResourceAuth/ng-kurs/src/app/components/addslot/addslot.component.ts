@@ -31,7 +31,7 @@ export class AddslotComponent implements OnInit {
   myToday: any;
   slotValidation: FormGroup;
   ngOnInit(): void {
-    this.myToday = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), 0, this.today.getMinutes()+30, 0).toISOString().substring(0, 16);
+    this.myToday = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), this.today.getHours()+3, this.today.getMinutes(), 0).toISOString().substring(0, 16);
     if (!this.auth.isAuthenticated()) {
       this.router.navigate(["auth"])
     }
@@ -39,11 +39,16 @@ export class AddslotComponent implements OnInit {
       Title: ['', [Validators.required, Validators.maxLength(30)]],
       Cost:['',[Validators.required]],
       Type: ['', Validators.required],
-      StartDate: [this.mindate, Validators.required],
+      Text: ['', Validators.required],
+      StartDate: [this.myToday, Validators.required],
       EndDate: [this.myToday,Validators.required],
     });
     this.bs.getTypes().subscribe(x => { this.types = x }, err => alert("Ошибка получения типов"));
   }
+
+
+
+
   checkphoto():boolean{
    return this.files.length
   }
@@ -82,7 +87,9 @@ removephoto(){
 }
 
   addslot(price: number, description: string, seller: string): void {
-    if (price && (description && this.files[0])) {
+   const enddate= this.slotValidation.controls['EndDate'].value;
+    const startdate = this.slotValidation.controls['StartDate'].value;
+    if (startdate - enddate < 0 && startdate >= this.myToday) {
 
       this.changes.cost = price.toString();
       this.changes.description = description;
@@ -96,7 +103,7 @@ removephoto(){
       this.bs.addSlot(this.changes, this.files).subscribe(res => { this.spinerlot = false, this.toastr.info("Ваш лот появится через минуту") }, err => { this.spinerlot = false, console.log(err) });
     }
     else {
-      alert("Проверьте поля и картинку")
+      this.toastr.error("Проверьте даты торгов");
     }
   }
   tiles= [

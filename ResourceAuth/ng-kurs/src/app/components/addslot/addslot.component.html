@@ -7,7 +7,7 @@
       <form [formGroup]="slotValidation">
         <p>
           <mat-form-field appearance="legacy">
-            <mat-label>Title</mat-label>
+            <mat-label>Название</mat-label>
             <input type="text" matInput placeholder="Название" formControlName="Title" id="Title" #seller>
             <mat-error *ngIf="slotValidation.get('Title').hasError('required')">
               First Name is Required!
@@ -29,28 +29,27 @@
           </owl-carousel>
         </div>
         <mat-grid-list cols="4" rowHeight="100px">
-
           <mat-grid-tile [colspan]="4"
                          [rowspan]="2">
             <div class="form-group green-border-focus">
               <div class="row">Описание</div>
-              <textarea class="form-control" id="exampleFormControlTextarea5" rows="5" cols="50" #text></textarea>
+              <textarea class="form-control" rows="5" formControlName="Text" cols="70" #text></textarea>
             </div>
           </mat-grid-tile>
         </mat-grid-list>
         <div class="example-container">
           <mat-form-field>
-            <mat-label>Дата начала торгов</mat-label>
-            <input matInput type="datetime-local" autocomplete="off" formControlName="StartDate" [min]="mindate" placeholder="Выберите дату">
+            <mat-label style="font-size:18px;font-family:Arial; color:black">Дата начала торгов</mat-label>
+            <input matInput type="datetime-local" autocomplete="off" formControlName="StartDate" [min]="myToday" placeholder="Выберите дату">
           </mat-form-field>
           <mat-form-field>
-            <mat-label>Дата конца торгов</mat-label>
+            <mat-label style="font-size:18px;font-family:Arial; color:black">Дата конца торгов</mat-label>
             <input matInput type="datetime-local" autocomplete="off" formControlName="EndDate" [min]="myToday" class="example-right-align" placeholder="Выберите дату">
           </mat-form-field>
         </div>
         <div class="example-container">
           <mat-form-field>
-            <mat-label>Type</mat-label>
+            <mat-label style="font-size:18px;font-family:Arial;color:black">Тип</mat-label>
             <mat-select formControlName="Type">
               <mat-option *ngFor="let type of types;let i =index;" [value]="type.id">
                 {{type.lotType}}
@@ -61,10 +60,10 @@
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="legacy">
-            <mat-label>Установите цену</mat-label>
+            <mat-label style="font-size:18px;font-family:Arial;color:black">Установите цену</mat-label>
             <input type="number" formControlName="Cost" matInput placeholder="Placeholder" #price>
             <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-            <mat-hint>BYN</mat-hint>
+            <mat-hint style="font-size:16px;font-family:Arial;color:black">BYN</mat-hint>
             <mat-error *ngIf="slotValidation.get('Cost').hasError('required')">
               Введите цену
             </mat-error>

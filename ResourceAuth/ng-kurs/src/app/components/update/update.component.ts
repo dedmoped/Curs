@@ -4,6 +4,8 @@ import { Slots } from 'src/app/models/slot';
 import {SlotstoreService} from 'src/app/services/slotstore.service'
 import {ActivatedRoute} from '@angular/router'
 import { FooterRowOutlet } from '@angular/cdk/table';
+import { ToastrService } from 'ngx-toastr';
+import { title } from 'process';
 @Component({
   selector: 'app-update',
   templateUrl: './update.component.html',
@@ -11,7 +13,7 @@ import { FooterRowOutlet } from '@angular/cdk/table';
 })
 export class UpdateComponent implements OnInit {
 
-  constructor(private bs:SlotstoreService,private route:ActivatedRoute) 
+  constructor(private bs: SlotstoreService, private route: ActivatedRoute, private Toast: ToastrService) 
   { 
 this.subscription=route.params.subscribe(params=>this.id=params['id']);
   }
@@ -29,24 +31,30 @@ this.subscription=route.params.subscribe(params=>this.id=params['id']);
     this.bs.getOrderById(this.id).subscribe(res=>{this.slots=res})
   }
   
+
   uploadFile(event) {
+    this.files = [];
+    this.imgUrl = [];
     for (let index = 0; index < event.length; index++) {
       const element = event[index];
-      this.files[0]=element
-      var reader= new FileReader();
+      this.files[index] = element
+      var reader = new FileReader();
+      reader.onload = (_event) => {
+        this.imgUrl[index] = _event.target.result;
+      }
       reader.readAsDataURL(element);
-      reader.onload=(_event)=>{
-      this.imgUrl[0]=reader.result;
-     }
-      
+    }
   }
-}
-  updateslot(id:number,seller:string,price:number,description:string):void{
+
+
+
+
+  updateslot(id:number,title:string,price:number,description:string):void{
    this.changes.id=id;
-    this.changes.seller = seller;
+    this.changes.title = title
     this.changes.cost = price.toString();
-   this.changes.description=description;
-   this.bs.updateSlot(this.changes,this.files[0]).subscribe();
+    this.changes.description = description;
+    this.bs.updateSlot(this.changes, this.files).subscribe(res => this.Toast.success(res["message"]), err => { this.Toast.error(err.error.text)});
   }
   carouselOptions = {
     margin: 25,

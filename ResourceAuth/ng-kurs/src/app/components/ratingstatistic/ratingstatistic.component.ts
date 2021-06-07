@@ -12,7 +12,7 @@ export class RatingstatisticComponent implements OnInit {
 
   constructor(private ac : AccountService) { }
   stats: any[] = [];
-  label = 'Positive';
+  label = 'Рейтинг продавцов';
   isLoadingResults = true;
   barChartOptions: ChartOptions = {
     responsive: true,
@@ -30,7 +30,7 @@ export class RatingstatisticComponent implements OnInit {
   barChartType: ChartType = 'bar';
   barChartLegend = true;
   barChartPlugins = [];
-  barChartData: ChartDataSets[] = [{ data: [], backgroundColor: [], label: this.label }];
+  barChartData: ChartDataSets[] = [{ data: [], backgroundColor: [], label: this.label}];
   ngOnInit(): void {
     this.getStatistic();
   }
@@ -46,13 +46,9 @@ export class RatingstatisticComponent implements OnInit {
         this.stats.forEach((stat) => {
           this.barChartLabels.push(stat.email);
           chartdata.push(stat.statistic);
-          if (this.label === 'Positive') {
-            chartcolor.push('rgba(255, 165, 0, 0.5)');
-          } else if (this.label === 'Dead') {
-            chartcolor.push('rgba(255, 0, 0, 0.5)');
-          } else {
+          if (this.label === 'Рейтинг продавцов') {
             chartcolor.push('rgba(0, 255, 0, 0.5)');
-          }
+          } 
         });
         this.barChartData = [{ data: chartdata, backgroundColor: chartcolor, label: this.label }];
         this.isLoadingResults = false;

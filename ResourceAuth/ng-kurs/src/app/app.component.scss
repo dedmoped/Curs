@@ -31,10 +31,9 @@ color: black;
   text-align: center;
 }
 .content-outer-container {
-  background-image: url("../assets/3.jpg");
-  background-attachment: fixed;
-  background-repeat: no-repeat;
+  background-color: #e1f0fb;
   min-height: 100%;
+  min-width: 100%;
   margin: 0px;
 }
 .content-inner-container{
@@ -44,4 +43,7 @@ color: black;
   max-width: 300px;
   float: left;
 }
-
+a{
+   font-family:'Times New Roman';
+   font-size:18px;
+}
